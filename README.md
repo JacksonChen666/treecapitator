@@ -1,6 +1,5 @@
-# PluginTemplate
-A basic Minecraft Spigot plugin as a template.
+# tree-capitator
 
-Use the branch switcher to switch between different versions.
+This is Hypixel's tree capitator thing except I made this because I'm bored.
 
-You might need to change the group in the build.gradle file.
+No, this is not the source code from Hypixel, it's my own.
