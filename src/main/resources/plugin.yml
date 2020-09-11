@@ -6,15 +6,7 @@ version: 1.0-SNAPSHOT
 description: Capitates trees just like Hypixel
 
 commands:
-  template:
-    description: A template command
-
-permissions:
-  Template:
-    default: not op
-    children:
-      Template.Template: true
-  Template.Template:
-    default: not op
+  treecap:
+    description: Get a Tree Capitator!
 
 # https://bukkit.gamepedia.com/Plugin_YAML

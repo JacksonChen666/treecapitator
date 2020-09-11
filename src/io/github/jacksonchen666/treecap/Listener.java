@@ -6,14 +6,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
 
 public class Listener implements org.bukkit.event.Listener {
     public static final Material[] acceptableBlock = {
@@ -28,7 +24,9 @@ public class Listener implements org.bukkit.event.Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Material mainHand = player.getInventory().getItemInMainHand().getType();
-        if (mainHand == Material.GOLDEN_AXE && isAcceptableBlock(event.getBlock().getType())) {
+        if (mainHand == Material.GOLDEN_AXE &&
+                CustomItemManager.isCustomItem(player.getInventory().getItemInMainHand(), TreeCapitator.itemName, TreeCapitator.lore) &&
+                Arrays.stream(acceptableBlock).anyMatch(l -> l == event.getBlock().getType())) {
             chosenBlock = event.getBlock().getType(); // this could resolve in possible conflict between each players
             breakAroundBlocks(event.getBlock(), player.getInventory().getItemInMainHand());
         }
@@ -39,7 +37,7 @@ public class Listener implements org.bukkit.event.Listener {
         for (Block i : blocksAround) {
             if (i.getType() == chosenBlock) {
                 i.breakNaturally(tool); // Does not trigger block break event
-//                tool.setDurability((short) (tool.getDurability() + 1)); // deprecated method. also, it's unbreakable tools on hypixel
+                //                tool.setDurability((short) (tool.getDurability() + 1)); // deprecated method. also, it's unbreakable tools on hypixel
                 breakAroundBlocks(i, tool);
             }
         }
@@ -57,9 +55,5 @@ public class Listener implements org.bukkit.event.Listener {
             }
         }
         return blocks;
-    }
-
-    public boolean isAcceptableBlock(final Material material) {
-        return Arrays.stream(acceptableBlock).anyMatch(i -> i == material);
     }
 }

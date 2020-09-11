@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'io.github.jacksonchen666'
+group 'io.github.jacksonchen666.treecap'
 version '1.0-SNAPSHOT'
 
 repositories {
