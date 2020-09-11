@@ -1,0 +1,7 @@
+# use "&" to use minecraft color codings
+error_prefix: "&4[Error]"
+console_execution: "You can't do player things in console!" # this is logged as a warning in the console and cannot use colors
+missing_argument: "{prefix} &cYou are missing arguments: {argument}"
+player_not_found: "{prefix} &c{player} not online!"
+no_perm_message: "{prefix} &cYou don't have proper permissions! Permission: {permission}"
+subcommand_not_found: "{prefix} &cSub-command not found!"

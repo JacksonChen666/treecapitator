@@ -1,0 +1,20 @@
+name: TemplatePlugin
+main: io.github.jacksonchen666.template.Main
+author: JacksonChen666
+api-version: 1.16.2
+version: 1.0-SNAPSHOT
+description: A template plugin
+
+commands:
+  template:
+    description: A template command
+
+permissions:
+  Template:
+    default: not op
+    children:
+      Template.Template: true
+  Template.Template:
+    default: not op
+
+# https://bukkit.gamepedia.com/Plugin_YAML
