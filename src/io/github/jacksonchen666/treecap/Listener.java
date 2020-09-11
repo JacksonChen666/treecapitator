@@ -6,10 +6,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
 
 public class Listener implements org.bukkit.event.Listener {
     public static final Material[] acceptableBlock = {
@@ -18,22 +22,25 @@ public class Listener implements org.bukkit.event.Listener {
             Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
             Material.STRIPPED_SPRUCE_LOG
     };
+    private Material chosenBlock;
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Material mainHand = player.getInventory().getItemInMainHand().getType();
-        Material target = Material.GOLDEN_AXE;
-        if (mainHand == target && isAcceptableBlock(event.getBlock().getType())) {
-            searchAroundBlock(event.getBlock(), player.getInventory().getItemInMainHand());
+        if (mainHand == Material.GOLDEN_AXE && isAcceptableBlock(event.getBlock().getType())) {
+            chosenBlock = event.getBlock().getType(); // this could resolve in possible conflict between each players
+            breakAroundBlocks(event.getBlock(), player.getInventory().getItemInMainHand());
         }
     }
 
-    public void searchAroundBlock(final Block block, final ItemStack tool) {
+    public void breakAroundBlocks(final Block block, final ItemStack tool) {
         ArrayList<Block> blocksAround = getBlocks(block, 1);
         for (Block i : blocksAround) {
-            if (isAcceptableBlock(i.getType())) {
-                i.breakNaturally(tool);
+            if (i.getType() == chosenBlock) {
+                i.breakNaturally(tool); // Does not trigger block break event
+//                tool.setDurability((short) (tool.getDurability() + 1)); // deprecated method. also, it's unbreakable tools on hypixel
+                breakAroundBlocks(i, tool);
             }
         }
     }
