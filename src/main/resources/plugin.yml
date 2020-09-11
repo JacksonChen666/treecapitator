@@ -1,9 +1,9 @@
-name: TemplatePlugin
-main: io.github.jacksonchen666.template.Main
+name: TreeCap
+main: io.github.jacksonchen666.treecap.Main
 author: JacksonChen666
-api-version: 1.16.2
+api-version: 1.16 # It should be valid because it says it here: https://www.spigotmc.org/wiki/plugin-yml/
 version: 1.0-SNAPSHOT
-description: A template plugin
+description: Capitates trees just like Hypixel
 
 commands:
   template:
