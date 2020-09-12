@@ -8,7 +8,6 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         new TreeCap(this);
         getServer().getPluginManager().registerEvents(new Listener(), this);
-        MapCleanUp cleanUp = new MapCleanUp();
-        cleanUp.runTaskTimer(this, 6000, 6000);
+        new MapCleanUp().runTaskTimer(this, 6000, 6000);
     }
 }

@@ -58,8 +58,7 @@ public class Listener implements org.bukkit.event.Listener {
         for (double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++) {
             for (double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++) {
                 for (double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++) {
-                    Location loc = new Location(start.getWorld(), x, y, z);
-                    blocks.add(loc.getBlock());
+                    blocks.add(new Location(start.getWorld(), x, y, z).getBlock());
                 }
             }
         }

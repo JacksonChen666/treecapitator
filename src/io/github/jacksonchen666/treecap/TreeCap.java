@@ -24,48 +24,44 @@ public class TreeCap implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (!(commandSender instanceof Player)) {
-            if (args.length >= 1) {
-                try {
-                    TreeCapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
-                }
-                catch (NullPointerException e) {
-                    plugin.getServer().getConsoleSender().sendMessage(getText("player_not_found").replace("{prefix}", getText("error_prefix").replace("{player}", args[0])));
-                }
-            }
-            if (args.length >= 2) {
-                try {
-                    Listener.maximum = Integer.parseInt(args[1]);
-                }
-                catch (NumberFormatException ignored) {
-
-                }
-            }
-            else {
-                plugin.getServer().getConsoleSender().sendMessage(getText("missing_argument").replace("{prefix}", getText("error_prefix")).replace("{argument}", "player"));
-            }
-            return false;
-        }
-
-        Player p = (Player) commandSender;
         if (s.equalsIgnoreCase(commandName)) {
+            if (!(commandSender instanceof Player)) {
+                if (args.length == 1) {
+                    try {
+                        Listener.maximum = Integer.parseInt(args[0]);
+                        return true;
+                    }
+                    catch (NumberFormatException e) {
+                        try {
+                            TreeCapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
+                            return true;
+                        }
+                        catch (NullPointerException e1) {
+                            plugin.getServer().getConsoleSender().sendMessage(getText("player_not_found").replace("{prefix}", getText("error_prefix").replace("{player}", args[0])));
+                        }
+                    }
+                }
+                else {
+                    plugin.getServer().getConsoleSender().sendMessage(getText("missing_argument").replace("{prefix}", getText("error_prefix")).replace("{argument}", "player"));
+                }
+                return false;
+            }
+
+            Player p = (Player) commandSender;
             if (args.length == 0) {
                 TreeCapitator.giveItem(p);
             }
             else {
                 try {
-                    TreeCapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
+                    Listener.maximum = Integer.parseInt(args[0]);
                 }
-                catch (NullPointerException e) {
-                    p.sendMessage(getText("player_not_found").replace("{prefix}", getText("error_prefix").replace("{player}", args[0])));
-                }
-                try {
-                    if (args.length >= 2) {
-                        Listener.maximum = Integer.parseInt(args[1]);
+                catch (NumberFormatException e) {
+                    try {
+                        TreeCapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
                     }
-                }
-                catch (NumberFormatException ignored) {
-
+                    catch (NullPointerException e1) {
+                        p.sendMessage(getText("player_not_found").replace("{prefix}", getText("error_prefix").replace("{player}", args[0])));
+                    }
                 }
             }
             return true;
