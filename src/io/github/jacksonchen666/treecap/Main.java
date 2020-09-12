@@ -7,6 +7,5 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         new TreeCap(this);
         getServer().getPluginManager().registerEvents(new Listener(), this);
-        new MapCleanUp().runTaskTimer(this, 6000, 6000);
     }
 }

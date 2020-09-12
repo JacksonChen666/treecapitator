@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.time.LocalTime;
 import java.util.*;
 
 public class Listener implements org.bukkit.event.Listener {
@@ -19,18 +20,24 @@ public class Listener implements org.bukkit.event.Listener {
     };
     static final Map<Player, Integer> amounts = new HashMap<>();
     static final Map<Player, Material> chosenBlocks = new HashMap<>();
+    static final Map<Player, LocalTime> coolDownTo = new HashMap<>();
     public static int maximum = 32;
+    public static int coolDownSeconds = 2;
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ItemStack mainHand = player.getInventory().getItemInMainHand();
-        if (mainHand.getType() == Material.GOLDEN_AXE &&
+        Block block = event.getBlock();
+        if (LocalTime.now().isAfter(coolDownTo.get(player)) &&
+                mainHand.getType() == Material.GOLDEN_AXE &&
                 CustomItemManager.isCustomItem(mainHand, TreeCapitator.itemName, TreeCapitator.lore) &&
-                Arrays.stream(acceptableBlock).anyMatch(l -> l == event.getBlock().getType())) {
-            amounts.put(player, 0);
-            chosenBlocks.put(player, event.getBlock().getType());
-            breakAroundBlocks(event.getBlock(), mainHand, player);
+                Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
+            chosenBlocks.put(player, block.getType());
+            breakAroundBlocks(block, mainHand, player);
+            coolDownTo.put(player, LocalTime.now().plusSeconds(coolDownSeconds));
+            chosenBlocks.remove(player);
+            amounts.remove(player);
         }
     }
 
