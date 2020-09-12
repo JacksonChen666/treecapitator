@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Listener implements org.bukkit.event.Listener {
     public static final Material[] acceptableBlock = {
@@ -18,7 +20,9 @@ public class Listener implements org.bukkit.event.Listener {
             Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
             Material.STRIPPED_SPRUCE_LOG
     };
-    private Material chosenBlock;
+    static final Map<Player, Integer> amounts = new HashMap<>();
+    static final Map<Player, Material> chosenBlocks = new HashMap<>();
+    public static int maximum = 32;
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -27,18 +31,23 @@ public class Listener implements org.bukkit.event.Listener {
         if (mainHand == Material.GOLDEN_AXE &&
                 CustomItemManager.isCustomItem(player.getInventory().getItemInMainHand(), TreeCapitator.itemName, TreeCapitator.lore) &&
                 Arrays.stream(acceptableBlock).anyMatch(l -> l == event.getBlock().getType())) {
-            chosenBlock = event.getBlock().getType(); // this could resolve in possible conflict between each players
-            breakAroundBlocks(event.getBlock(), player.getInventory().getItemInMainHand());
+            amounts.put(player, 0);
+            chosenBlocks.put(player, event.getBlock().getType());
+            breakAroundBlocks(event.getBlock(), player.getInventory().getItemInMainHand(), player);
         }
     }
 
-    public void breakAroundBlocks(final Block block, final ItemStack tool) {
+    public void breakAroundBlocks(final Block block, final ItemStack tool, final Player player) {
         ArrayList<Block> blocksAround = getBlocks(block, 1);
+        Material chosenBlock = chosenBlocks.get(player);
         for (Block i : blocksAround) {
             if (i.getType() == chosenBlock) {
-                i.breakNaturally(tool); // Does not trigger block break event
-                //                tool.setDurability((short) (tool.getDurability() + 1)); // deprecated method. also, it's unbreakable tools on hypixel
-                breakAroundBlocks(i, tool);
+                int amount = amounts.getOrDefault(player, 0);
+                if (maximum > amount) {
+                    i.breakNaturally(tool); // Does not trigger block break event
+                    amounts.put(player, amount + 1);
+                    breakAroundBlocks(i, tool, player);
+                }
             }
         }
     }

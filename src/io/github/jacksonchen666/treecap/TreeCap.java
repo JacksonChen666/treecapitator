@@ -33,6 +33,14 @@ public class TreeCap implements CommandExecutor {
                     plugin.getServer().getConsoleSender().sendMessage(getText("player_not_found").replace("{prefix}", getText("error_prefix").replace("{player}", args[0])));
                 }
             }
+            if (args.length >= 2) {
+                try {
+                    Listener.maximum = Integer.parseInt(args[1]);
+                }
+                catch (NumberFormatException ignored) {
+
+                }
+            }
             else {
                 plugin.getServer().getConsoleSender().sendMessage(getText("missing_argument").replace("{prefix}", getText("error_prefix")).replace("{argument}", "player"));
             }
@@ -50,6 +58,14 @@ public class TreeCap implements CommandExecutor {
                 }
                 catch (NullPointerException e) {
                     p.sendMessage(getText("player_not_found").replace("{prefix}", getText("error_prefix").replace("{player}", args[0])));
+                }
+                try {
+                    if (args.length >= 2) {
+                        Listener.maximum = Integer.parseInt(args[1]);
+                    }
+                }
+                catch (NumberFormatException ignored) {
+
                 }
             }
             return true;
