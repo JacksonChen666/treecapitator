@@ -6,6 +6,6 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         new TreeCap(this);
-        getServer().getPluginManager().registerEvents(new Listener(), this);
+        getServer().getPluginManager().registerEvents(new Listener(this), this);
     }
 }

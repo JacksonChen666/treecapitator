@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -23,6 +24,11 @@ public class Listener implements org.bukkit.event.Listener {
     static final Map<Player, LocalTime> coolDownTo = new HashMap<>();
     public static int maximum = 32;
     public static int coolDownSeconds = 2;
+    private final JavaPlugin plugin;
+
+    public Listener(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -34,10 +40,13 @@ public class Listener implements org.bukkit.event.Listener {
                 CustomItemManager.isCustomItem(mainHand, TreeCapitator.itemName, TreeCapitator.lore) &&
                 Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
             chosenBlocks.put(player, block.getType());
-            breakAroundBlocks(block, mainHand, player);
-            coolDownTo.put(player, LocalTime.now().plusSeconds(coolDownSeconds));
+            //            breakAroundBlocks(block, mainHand, player);
+            Iterator<List<Block>> thing = searchAroundBlocksList(block, player).iterator();
+            BreakingBlocks task = new BreakingBlocks(thing, mainHand, player);
+            task.runTaskTimer(plugin, 1L, 1L);
+            //            coolDownTo.put(player, LocalTime.now().plusSeconds(coolDownSeconds));
             chosenBlocks.remove(player);
-            amounts.remove(player);
+            //            amounts.remove(player);
         }
     }
 
@@ -56,6 +65,46 @@ public class Listener implements org.bukkit.event.Listener {
             });
             blocksAround = blocksAroundBlocksAround;
         }
+    }
+
+    public List<Block> searchAroundBlocks(final Block target, final Player player) {
+        int amount = 0;
+        Material chosenBlock = chosenBlocks.get(player);
+        List<Block> blocksToBreak = new ArrayList<>();
+        List<Block> toSearch = new ArrayList<>();
+        toSearch.add(target);
+        while (maximum > amount && toSearch.size() > 0) {
+            List<Block> newToSearch = new ArrayList<>();
+            for (Block search : toSearch) {
+                ArrayList<Block> blocks = getBlocks(search, 1);
+                blocks.removeIf(block -> block.getType() != chosenBlock);
+                newToSearch.addAll(blocks);
+            }
+            amount += newToSearch.size();
+            blocksToBreak.addAll(toSearch);
+            toSearch = newToSearch;
+        }
+        return blocksToBreak;
+    }
+
+    public List<List<Block>> searchAroundBlocksList(final Block target, final Player player) {
+        int amount = 0;
+        Material chosenBlock = chosenBlocks.get(player);
+        List<List<Block>> blocksToBreak = new ArrayList<>();
+        List<Block> toSearch = new ArrayList<>();
+        toSearch.add(target);
+        while (maximum > amount && toSearch.size() > 0) {
+            List<Block> newToSearch = new ArrayList<>();
+            for (Block search : toSearch) {
+                ArrayList<Block> blocks = getBlocks(search, 1);
+                blocks.removeIf(block -> block.getType() != chosenBlock);
+                newToSearch.addAll(blocks);
+            }
+            amount += newToSearch.size();
+            toSearch = newToSearch;
+            blocksToBreak.add(toSearch);
+        }
+        return blocksToBreak;
     }
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
