@@ -2,11 +2,9 @@ name: TreeCap
 main: io.github.jacksonchen666.treecap.Main
 author: JacksonChen666
 api-version: 1.16 # It should be valid because it says it here: https://www.spigotmc.org/wiki/plugin-yml/
-version: 1.0-SNAPSHOT
+version: 1.0.0
 description: Capitates trees just like Hypixel
 
 commands:
   treecap:
     description: Get a Tree Capitator!
-
-# https://bukkit.gamepedia.com/Plugin_YAML

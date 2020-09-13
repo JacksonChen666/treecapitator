@@ -1,4 +1,8 @@
-# use "&" to use minecraft color codings
-error_prefix: "&4[Error]"
-missing_argument: "{prefix} &cYou are missing arguments: {argument}"
-player_not_found: "{prefix} &c{player} not online!"
+# Use & as color coding
+#error_prefix: "&4[Error]"
+#missing_argument: "{prefix} &cYou are missing arguments: {argument}"
+#player_not_found: "{prefix} &c{player} not online!"
+maxLogs: 32
+cooldown: 2
+
+plugin_prefix: "&a[&rTreeCap&a]&r"
