@@ -29,7 +29,7 @@ public class Listener implements org.bukkit.event.Listener {
         Player player = event.getPlayer();
         ItemStack mainHand = player.getInventory().getItemInMainHand();
         Block block = event.getBlock();
-        if (LocalTime.now().isAfter(coolDownTo.get(player)) &&
+        if (LocalTime.now().isAfter(coolDownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
                 mainHand.getType() == Material.GOLDEN_AXE &&
                 CustomItemManager.isCustomItem(mainHand, TreeCapitator.itemName, TreeCapitator.lore) &&
                 Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
@@ -42,23 +42,21 @@ public class Listener implements org.bukkit.event.Listener {
     }
 
     public void breakAroundBlocks(final Block target, final ItemStack tool, final Player player) {
-        List<Block> blocksAround = getBlocks(target, 1);
         Material chosenBlock = chosenBlocks.get(player);
-        blocksAround.removeIf(block -> block.getType() != chosenBlock);
-        for (Block i : Collections.unmodifiableList(blocksAround)) {
-            int amount = amounts.getOrDefault(player, 0);
-            if (maximum >= amount && i.breakNaturally(tool)) { // Does not trigger block break event and only returns true if block is broken
-                amounts.put(player, amount + 1);
-            }
-            else {
-                break;
-            }
+        List<Block> blocksAround = Collections.singletonList(target);
+        while (maximum > amounts.getOrDefault(player, 0) && blocksAround.size() > 0) { // the "didn't break enough" loop
+            // TODO Avoid continuous search
+            List<Block> blocksAroundBlocksAround = new ArrayList<>();
+            blocksAround.stream().map(block -> getBlocks(block, 1)).forEach(blocksAroundBlocksAround::addAll);
+            blocksAroundBlocksAround.removeIf(block -> block.getType() != chosenBlock);
+            blocksAroundBlocksAround.forEach(block -> {
+                int amount = amounts.getOrDefault(player, 0);
+                if (maximum > amount && block.breakNaturally(tool)) {
+                    amounts.put(player, amount + 1);
+                }
+            });
+            blocksAround = blocksAroundBlocksAround;
         }
-        breakAroundBlocks(blocksAround, tool, player);
-    }
-
-    public void breakAroundBlocks(final List<Block> blocks, final ItemStack tool, final Player player) {
-        blocks.forEach(block -> breakAroundBlocks(block, tool, player));
     }
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
