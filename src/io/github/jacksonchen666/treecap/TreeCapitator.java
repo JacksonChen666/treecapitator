@@ -11,10 +11,9 @@ public class TreeCapitator {
     public static final String itemName = "Tree Capitator";
     public static final List<String> lore = Arrays.asList("What do i do here", "uwu");
 
-    public static ItemStack giveItem(Player player) {
+    public static void giveItem(Player player) {
         ItemStack item = createItem();
         player.getInventory().addItem(item);
-        return item;
     }
 
     public static ItemStack createItem() {

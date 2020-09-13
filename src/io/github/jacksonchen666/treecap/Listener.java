@@ -45,7 +45,6 @@ public class Listener implements org.bukkit.event.Listener {
         Material chosenBlock = chosenBlocks.get(player);
         List<Block> blocksAround = Collections.singletonList(target);
         while (maximum > amounts.getOrDefault(player, 0) && blocksAround.size() > 0) { // the "didn't break enough" loop
-            // TODO Avoid continuous search
             List<Block> blocksAroundBlocksAround = new ArrayList<>();
             blocksAround.stream().map(block -> getBlocks(block, 1)).forEach(blocksAroundBlocksAround::addAll);
             blocksAroundBlocksAround.removeIf(block -> block.getType() != chosenBlock);

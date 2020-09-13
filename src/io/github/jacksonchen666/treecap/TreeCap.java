@@ -12,6 +12,10 @@ public class TreeCap implements CommandExecutor {
     public static final String commandName = "treecap";
     public static final int dangerThreshold = 128;
     private final Main plugin;
+    private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " is " +
+            "dangerously high, and could possibly cause server crashes and data loss. Please consider choosing a smaller " +
+            "number, as the plugin not intended for large amounts. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY " +
+            "DAMAGES DONE BY THE USER IN ANY WAY, SHAPE, OR FORM.";
 
     public TreeCap(Main plugin) {
         this.plugin = plugin;
@@ -31,12 +35,7 @@ public class TreeCap implements CommandExecutor {
                     try {
                         Listener.maximum = Integer.parseInt(args[0]);
                         if (Listener.maximum > dangerThreshold) {
-                            plugin.getServer().getConsoleSender().sendMessage("WARNING! Choosing a number above " +
-                                    dangerThreshold + " is considered dangerously high and slow, which could cause " +
-                                    "most of the players to disconnect and the server to shutdown because of the " +
-                                    "timeout. Please consider choosing a smaller number, as it's not intended for large " +
-                                    "amounts. THE CREATOR OF THE PLUGIN IS NOT RESPONSIBLE FOR ANY DAMAGES THE USER HAS " +
-                                    "CAUSED TO THEIR SERVERS.");
+                            plugin.getServer().getConsoleSender().sendMessage(warningMessage.replaceAll("§.", ""));
                             plugin.getServer().getConsoleSender().sendMessage("Set max logs to cut to " + Listener.maximum);
                         }
                         return true;
@@ -65,11 +64,7 @@ public class TreeCap implements CommandExecutor {
                 try {
                     Listener.maximum = Integer.parseInt(args[0]);
                     if (Listener.maximum > dangerThreshold) {
-                        p.sendMessage("§4§lWARNING! §cChoosing a number above " + dangerThreshold + " is considered " +
-                                "dangerously high and slow, which could cause most of the players to disconnect and " +
-                                "the server to shutdown because of the timeout. Please consider choosing a smaller " +
-                                "number, as it's not intended for large amounts. §4§l§oTHE CREATOR OF THE PLUGIN IS NOT " +
-                                "RESPONSIBLE FOR ANY DAMAGES THE USER HAS CAUSED TO THEIR SERVERS.");
+                        p.sendMessage(warningMessage);
                     }
                     p.sendMessage("Set max logs to cut to " + Listener.maximum);
                 }
