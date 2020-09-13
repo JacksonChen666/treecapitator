@@ -26,7 +26,7 @@ public class BreakingBlocks extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (int i = 0; i < blocksAmount / 4; i++) {
+        for (int i = 0; i < blocksAmount / 5; i++) {
             if (its.hasNext()) {
                 int amount = amounts.getOrDefault(player, 0);
                 Block block = its.next();

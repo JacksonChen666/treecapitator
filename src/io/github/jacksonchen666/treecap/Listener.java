@@ -47,25 +47,8 @@ public class Listener implements org.bukkit.event.Listener {
         }
     }
 
-    public void breakAroundBlocks(final Block target, final ItemStack tool, final Player player) {
-        Material chosenBlock = chosenBlocks.get(player);
-        List<Block> blocksAround = Collections.singletonList(target);
-        while (maximum > amounts.getOrDefault(player, 0) && blocksAround.size() > 0) { // the "didn't break enough" loop
-            List<Block> blocksAroundBlocksAround = new ArrayList<>();
-            blocksAround.stream().map(block -> getBlocks(block, 1)).forEach(blocksAroundBlocksAround::addAll);
-            blocksAroundBlocksAround.removeIf(block -> block.getType() != chosenBlock);
-            blocksAroundBlocksAround.forEach(block -> {
-                int amount = amounts.getOrDefault(player, 0);
-                if (maximum > amount && block.breakNaturally(tool)) {
-                    amounts.put(player, amount + 1);
-                }
-            });
-            blocksAround = blocksAroundBlocksAround;
-        }
-    }
-
     public List<Block> searchAroundBlocks(final Block target, final Player player) {
-        int amount = 0;
+        int amount = amounts.getOrDefault(player, 0);
         Material chosenBlock = chosenBlocks.get(player);
         List<Block> blocksToBreak = new ArrayList<>();
         List<Block> toSearch = new ArrayList<>();
