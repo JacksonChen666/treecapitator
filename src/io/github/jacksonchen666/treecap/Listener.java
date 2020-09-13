@@ -40,13 +40,10 @@ public class Listener implements org.bukkit.event.Listener {
                 CustomItemManager.isCustomItem(mainHand, TreeCapitator.itemName, TreeCapitator.lore) &&
                 Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
             chosenBlocks.put(player, block.getType());
-            //            breakAroundBlocks(block, mainHand, player);
-            Iterator<List<Block>> thing = searchAroundBlocksList(block, player).iterator();
+            List<Block> thing = searchAroundBlocks(block, player);
             BreakingBlocks task = new BreakingBlocks(thing, mainHand, player);
             task.runTaskTimer(plugin, 1L, 1L);
-            //            coolDownTo.put(player, LocalTime.now().plusSeconds(coolDownSeconds));
             chosenBlocks.remove(player);
-            //            amounts.remove(player);
         }
     }
 
@@ -81,30 +78,10 @@ public class Listener implements org.bukkit.event.Listener {
                 newToSearch.addAll(blocks);
             }
             amount += newToSearch.size();
-            blocksToBreak.addAll(toSearch);
+            blocksToBreak.addAll(newToSearch);
             toSearch = newToSearch;
         }
-        return blocksToBreak;
-    }
-
-    public List<List<Block>> searchAroundBlocksList(final Block target, final Player player) {
-        int amount = 0;
-        Material chosenBlock = chosenBlocks.get(player);
-        List<List<Block>> blocksToBreak = new ArrayList<>();
-        List<Block> toSearch = new ArrayList<>();
-        toSearch.add(target);
-        while (maximum > amount && toSearch.size() > 0) {
-            List<Block> newToSearch = new ArrayList<>();
-            for (Block search : toSearch) {
-                ArrayList<Block> blocks = getBlocks(search, 1);
-                blocks.removeIf(block -> block.getType() != chosenBlock);
-                newToSearch.addAll(blocks);
-            }
-            amount += newToSearch.size();
-            toSearch = newToSearch;
-            blocksToBreak.add(toSearch);
-        }
-        return blocksToBreak;
+        return blocksToBreak.size() > maximum ? blocksToBreak.subList(0, maximum) : blocksToBreak;
     }
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/

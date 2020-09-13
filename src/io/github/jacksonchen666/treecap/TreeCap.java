@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class TreeCap implements CommandExecutor {
     public static final String commandName = "treecap";
-    public static final int dangerThreshold = 128;
+    public static final int dangerThreshold = 1024;
     private final Main plugin;
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " is " +
             "dangerously high, and could possibly cause server crashes and data loss. Please consider choosing a smaller " +

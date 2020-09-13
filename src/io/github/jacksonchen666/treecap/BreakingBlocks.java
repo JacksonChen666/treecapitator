@@ -12,40 +12,34 @@ import java.util.List;
 import static io.github.jacksonchen666.treecap.Listener.*;
 
 public class BreakingBlocks extends BukkitRunnable {
-    private final Iterator<List<Block>> its;
+    private final Iterator<Block> its;
+    private final int blocksAmount;
     private final ItemStack tool;
     private final Player player;
 
-    public BreakingBlocks(Iterator<List<Block>> its, ItemStack tool, Player player) {
-        this.its = its;
+    public BreakingBlocks(List<Block> blocks, ItemStack tool, Player player) {
+        this.its = blocks.iterator();
+        blocksAmount = blocks.size();
         this.tool = tool;
         this.player = player;
     }
 
     @Override
     public void run() {
-        if (its.hasNext()) {
-            List<Block> t = its.next();
-            for (Block block : t) {
+        for (int i = 0; i < blocksAmount / 4; i++) {
+            if (its.hasNext()) {
                 int amount = amounts.getOrDefault(player, 0);
-                if (maximum > amount) {
-                    if (block.breakNaturally(tool)) {
-                        amounts.put(player, amount + 1);
-                    }
-                }
-                else {
-                    this.cancel();
+                Block block = its.next();
+                if (block.breakNaturally(tool)) {
+                    amounts.put(player, amount);
                 }
             }
+            else {
+                its.forEachRemaining(block -> {});
+                coolDownTo.put(player, LocalTime.now().plusSeconds(coolDownSeconds));
+                this.cancel();
+                break;
+            }
         }
-        else {
-            this.cancel();
-        }
-    }
-
-    @Override
-    public synchronized void cancel() throws IllegalStateException {
-        super.cancel();
-        coolDownTo.put(player, LocalTime.now().plusSeconds(coolDownSeconds));
     }
 }
