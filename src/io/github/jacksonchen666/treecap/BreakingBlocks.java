@@ -30,28 +30,24 @@ public class BreakingBlocks extends BukkitRunnable {
     private final List<Long> timeSpentEachTime = new ArrayList<>();
 
     public BreakingBlocks(List<Block> blocks, ItemStack tool, Player player) {
-        this.its = blocks.iterator();
+        its = blocks.iterator();
         blockCount = blocks.size();
         this.tool = tool;
         this.player = player;
     }
 
     public static List<Block> searchAroundBlocks(final Block target, final Player player, final Material chosenBlock) {
-        int amount = amounts.getOrDefault(player, 0);
         List<Block> blocksToBreak = new ArrayList<>();
         List<Block> toSearch = new ArrayList<>();
         toSearch.add(target);
-        while (maximum > amount && toSearch.size() > 0) {
+        while (maximum > blocksToBreak.size() && toSearch.size() > 0) {
             List<Block> newToSearch = new ArrayList<>();
-            for (Block search : toSearch) {
-                ArrayList<Block> blocks = getBlocks(search, 1);
-                blocks.removeIf(block -> block.getType() != chosenBlock);
-                newToSearch.addAll(blocks);
-            }
-            amount += newToSearch.size();
+            toSearch.stream().map(search -> getBlocks(search, 1)).forEach(newToSearch::addAll);
+            newToSearch.removeIf(block -> block.getType() != chosenBlock);
             blocksToBreak.addAll(newToSearch);
             toSearch = newToSearch;
         }
+        blocksToBreak.removeIf(block -> block.getType() != chosenBlock);
         return blocksToBreak;
     }
 
@@ -81,7 +77,7 @@ public class BreakingBlocks extends BukkitRunnable {
                 timeSpentEachTime.add(end - start);
                 long nanoTimeSpent = timeSpentEachTime.stream().mapToLong(nanoTime -> nanoTime).sum();
 
-                Bukkit.getLogger().info("[Treecap] Finished cutting " + blockCount + " logs for " + player.getName() + ", took " + (nanoTimeSpent / 1E+6) + "ms (average " + (nanoTimeSpent / timeSpentEachTime.size() / 1E+6) + "ms).");
+                Bukkit.getLogger().info("[Treecap] Finished cutting " + amount + " logs for " + player.getName() + ", took " + (nanoTimeSpent / 1E+6) + "ms (average " + (nanoTimeSpent / timeSpentEachTime.size() / 1E+6) + "ms).");
                 coolDownTo.put(player, LocalTime.now().plusSeconds(cooldown));
                 amounts.remove(player);
                 this.cancel();
