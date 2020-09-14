@@ -1,8 +1,12 @@
 # Use & as color coding
-#error_prefix: "&4[Error]"
-#missing_argument: "{prefix} &cYou are missing arguments: {argument}"
-#player_not_found: "{prefix} &c{player} not online!"
-maxLogs: 32
-cooldown: 2
-
-plugin_prefix: "&a[&rTreeCap&a]&r"
+prefix: '&a[&rTreeCap&a]&r'
+messages:
+  missing_argument: '{prefix} &cYou are missing arguments: {argument}'
+  player_not_found: '{prefix} &c{player} is not online!'
+  number_required: '{prefix} &cMust be a number'
+  set_maxLogs: '{prefix} &aSet max logs to cut to {amount}'
+  set_cooldown: '{prefix} &aSet cooldown to {amount} seconds'
+  get_axe: '{prefix} Ok, here is your axe.'
+settings:
+  maxLogs: 32
+  cooldown: 2

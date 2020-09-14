@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalTime;
@@ -29,18 +28,16 @@ public class BreakingBlocks extends BukkitRunnable {
     public static int maximum = 32;
     public static int cooldown = 2;
 
-    public BreakingBlocks(JavaPlugin plugin, List<Block> blocks, ItemStack tool, Player player) {
+    public BreakingBlocks(List<Block> blocks, ItemStack tool, Player player) {
         this.its = blocks.iterator();
         blocksAmount = blocks.size();
         this.tool = tool;
         this.player = player;
-        maximum = plugin.getConfig().getInt("maxLogs");
-        cooldown = plugin.getConfig().getInt("cooldown");
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < blocksAmount / 5; i++) {
+        for (int i = 0; i < blocksAmount / 10; i++) {
             if (its.hasNext()) {
                 int amount = amounts.getOrDefault(player, 0);
                 Block block = its.next();
@@ -49,8 +46,8 @@ public class BreakingBlocks extends BukkitRunnable {
                 }
             }
             else {
-                its.forEachRemaining(block -> {});
                 coolDownTo.put(player, LocalTime.now().plusSeconds(cooldown));
+                amounts.remove(player);
                 this.cancel();
                 break;
             }

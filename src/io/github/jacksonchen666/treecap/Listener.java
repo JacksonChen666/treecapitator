@@ -32,9 +32,9 @@ public class Listener implements org.bukkit.event.Listener {
                 Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
             chosenBlocks.put(player, block.getType());
             List<Block> thing = searchAroundBlocks(block, player);
-            BreakingBlocks task = new BreakingBlocks(plugin, thing, mainHand, player);
-            task.runTaskTimer(plugin, 1L, 1L);
             chosenBlocks.remove(player);
+            BreakingBlocks task = new BreakingBlocks(thing, mainHand, player);
+            task.runTaskTimer(plugin, 1L, 1L);
         }
     }
 }
