@@ -27,7 +27,7 @@ public class BreakingBlocks extends BukkitRunnable {
     private final ItemStack tool;
     private final Player player;
     private final int blockCount;
-    private long nanoTimeSpent;
+    private final List<Long> timeSpentEachTime = new ArrayList<>();
 
     public BreakingBlocks(List<Block> blocks, ItemStack tool, Player player) {
         this.its = blocks.iterator();
@@ -78,10 +78,10 @@ public class BreakingBlocks extends BukkitRunnable {
             }
             else {
                 long end = System.nanoTime();
-                nanoTimeSpent += end - start;
-                nanoTimeSpent /= 1e+6;
+                timeSpentEachTime.add(end - start);
+                long nanoTimeSpent = timeSpentEachTime.stream().mapToLong(nanoTime -> nanoTime).sum();
 
-                Bukkit.getLogger().info("[Treecap] Finished cutting " + blockCount + " logs for " + player.getName() + ", took " + nanoTimeSpent + "ms.");
+                Bukkit.getLogger().info("[Treecap] Finished cutting " + blockCount + " logs for " + player.getName() + ", took " + (nanoTimeSpent / 1E+6) + "ms (average " + (nanoTimeSpent / timeSpentEachTime.size() / 1E+6) + "ms).");
                 coolDownTo.put(player, LocalTime.now().plusSeconds(cooldown));
                 amounts.remove(player);
                 this.cancel();
@@ -89,6 +89,6 @@ public class BreakingBlocks extends BukkitRunnable {
             }
         }
         long end = System.nanoTime();
-        nanoTimeSpent += end - start;
+        timeSpentEachTime.add(end - start);
     }
 }

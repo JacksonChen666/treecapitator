@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 @org.bukkit.plugin.java.annotation.command.Command(name = "treecap", desc = "Get a Tree Capitator, give others players, and settings.")
 public class TreeCap implements CommandExecutor, TabCompleter {
     public static final String commandName = "treecap";
-    public static final int dangerThreshold = 1048576;
+    public static final int dangerThreshold = 16384;
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
