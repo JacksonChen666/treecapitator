@@ -22,7 +22,7 @@ public class BreakingBlocks extends BukkitRunnable {
     };
     protected static final Map<Player, Integer> amounts = new HashMap<>();
     protected static final Map<Player, LocalTime> coolDownTo = new HashMap<>();
-    public static int maximum = 32;
+    public static int maxLogs = 32;
     public static int cooldown = 2;
     public static int blocksPerTick = 256; // amount to break in every tick
     public static int searchTimeoutSeconds = 20;
@@ -44,7 +44,7 @@ public class BreakingBlocks extends BukkitRunnable {
         List<Block> blocksToBreak = new ArrayList<>();
         List<Block> toSearch = new ArrayList<>();
         toSearch.add(target);
-        while (maximum > blocksToBreak.size() && toSearch.size() > 0) {
+        while (maxLogs > blocksToBreak.size() && toSearch.size() > 0) {
             List<Block> newToSearch = new ArrayList<>();
             for (Block search : toSearch) {
                 ArrayList<Block> blocks;
@@ -86,7 +86,7 @@ public class BreakingBlocks extends BukkitRunnable {
         long start = System.nanoTime();
         for (int i = 0; i < (blocksPerTick > blockCount ? blocksPerTick : blockCount / 10); i++) {
             int amount = amounts.getOrDefault(player, 0);
-            if (maximum > amount && its.hasNext()) {
+            if (maxLogs > amount && its.hasNext()) {
                 Block block = its.next();
                 if (block.breakNaturally(tool)) {
                     amounts.put(player, amount + 1);

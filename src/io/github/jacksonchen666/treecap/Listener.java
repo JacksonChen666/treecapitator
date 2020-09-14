@@ -31,11 +31,11 @@ public class Listener implements org.bukkit.event.Listener {
                 mainHand.getType() == Material.GOLDEN_AXE &&
                 CustomItemManager.isCustomItem(mainHand, TreeCapitator.itemName, TreeCapitator.lore) &&
                 Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
-            Bukkit.getLogger().info("[TreeCap] " + player.getName() + " cut a tree with a maximum limit of " + maximum + ". Searching...");
+            Bukkit.getLogger().info("[TreeCap] " + player.getName() + " cut a tree with a maximum limit of " + maxLogs + ". Searching...");
             long start = System.nanoTime();
             List<Block> blockList = searchAroundBlocks(block, block.getType(), player);
             long end = System.nanoTime();
-            Bukkit.getLogger().info("[TreeCap] Finished searching for " + player.getName() + " in " + (end - start) / 1e+6 + "ms, breaking " + maximum + "/" + blockList.size() + " logs...");
+            Bukkit.getLogger().info("[TreeCap] Finished searching for " + player.getName() + " in " + (end - start) / 1e+6 + "ms, breaking " + maxLogs + "/" + blockList.size() + " logs...");
             BreakingBlocks task = new BreakingBlocks(blockList, mainHand, player);
             task.runTaskTimer(plugin, 1L, 1L);
         }

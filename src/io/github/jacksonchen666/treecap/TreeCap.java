@@ -74,32 +74,34 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                     commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
                     return false;
                 }
-                if (args[0].equalsIgnoreCase("maxLogs")) {
-                    BreakingBlocks.maximum = number;
-                    if (BreakingBlocks.maximum > dangerThreshold) {
-                        commandSender.sendMessage(warningMessage);
+                switch (args[0].toLowerCase()) {
+                    case "maxlogs" -> {
+                        BreakingBlocks.maxLogs = number;
+                        if (BreakingBlocks.maxLogs > dangerThreshold) {
+                            commandSender.sendMessage(warningMessage);
+                        }
+                        plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maxLogs);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maxLogs))));
                     }
-                    plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maximum);
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maximum))));
-                }
-                else if (args[0].equalsIgnoreCase("cooldown")) {
-                    BreakingBlocks.cooldown = number;
-                    plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
-                }
-                else if (args[0].equalsIgnoreCase("blocksPerTick")) {
-                    BreakingBlocks.blocksPerTick = number;
-                    plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.blocksPerTick);
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
-                }
-                else if (args[0].equalsIgnoreCase("searchTimeoutSeconds")) {
-                    BreakingBlocks.searchTimeoutSeconds = number;
-                    plugin.getConfig().set("settings.searchTimeoutSeconds", BreakingBlocks.searchTimeoutSeconds);
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_searchTimeoutSeconds", prefix).replace("{amount}", String.valueOf(BreakingBlocks.searchTimeoutSeconds))));
-                }
-                else {
-                    commandSender.sendMessage("Unknown setting.");
-                    return false;
+                    case "cooldown" -> {
+                        BreakingBlocks.cooldown = number;
+                        plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
+                    }
+                    case "blockspertick" -> {
+                        BreakingBlocks.blocksPerTick = number;
+                        plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.blocksPerTick);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
+                    }
+                    case "searchtimeoutseconds" -> {
+                        BreakingBlocks.searchTimeoutSeconds = number;
+                        plugin.getConfig().set("settings.searchTimeoutSeconds", BreakingBlocks.searchTimeoutSeconds);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.set_searchTimeoutSeconds", prefix).replace("{amount}", String.valueOf(BreakingBlocks.searchTimeoutSeconds))));
+                    }
+                    default -> {
+                        commandSender.sendMessage("Unknown setting.");
+                        return false;
+                    }
                 }
                 try {
                     plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
