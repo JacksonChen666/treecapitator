@@ -1,5 +1,6 @@
 package io.github.jacksonchen666.treecap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,7 +19,6 @@ public class BreakingBlocks extends BukkitRunnable {
             Material.STRIPPED_SPRUCE_LOG
     };
     protected static final Map<Player, Integer> amounts = new HashMap<>();
-    protected static final Map<Player, Material> chosenBlocks = new HashMap<>();
     protected static final Map<Player, LocalTime> coolDownTo = new HashMap<>();
     public static int maximum = 32;
     public static int cooldown = 2;
@@ -27,6 +27,7 @@ public class BreakingBlocks extends BukkitRunnable {
     private final ItemStack tool;
     private final Player player;
     private final int blockCount;
+    private long nanoTimeSpent;
 
     public BreakingBlocks(List<Block> blocks, ItemStack tool, Player player) {
         this.its = blocks.iterator();
@@ -35,9 +36,8 @@ public class BreakingBlocks extends BukkitRunnable {
         this.player = player;
     }
 
-    public static List<Block> searchAroundBlocks(final Block target, final Player player) {
+    public static List<Block> searchAroundBlocks(final Block target, final Player player, final Material chosenBlock) {
         int amount = amounts.getOrDefault(player, 0);
-        Material chosenBlock = chosenBlocks.get(player);
         List<Block> blocksToBreak = new ArrayList<>();
         List<Block> toSearch = new ArrayList<>();
         toSearch.add(target);
@@ -67,6 +67,7 @@ public class BreakingBlocks extends BukkitRunnable {
 
     @Override
     public void run() {
+        long start = System.nanoTime();
         for (int i = 0; i < (blocksPerTick > blockCount ? blocksPerTick : blockCount / 10); i++) {
             if (its.hasNext()) {
                 int amount = amounts.getOrDefault(player, 0);
@@ -76,11 +77,18 @@ public class BreakingBlocks extends BukkitRunnable {
                 }
             }
             else {
+                long end = System.nanoTime();
+                nanoTimeSpent += end - start;
+                nanoTimeSpent /= 1e+6;
+
+                Bukkit.getLogger().info("[Treecap] Finished cutting " + blockCount + " logs for " + player.getName() + ", took " + nanoTimeSpent + "ms.");
                 coolDownTo.put(player, LocalTime.now().plusSeconds(cooldown));
                 amounts.remove(player);
                 this.cancel();
-                break;
+                return;
             }
         }
+        long end = System.nanoTime();
+        nanoTimeSpent += end - start;
     }
 }
