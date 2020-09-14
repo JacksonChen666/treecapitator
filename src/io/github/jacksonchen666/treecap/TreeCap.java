@@ -119,13 +119,13 @@ public class TreeCap implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("maxLogs")) { // 32 -> 2048
+            if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
                 return IntStream.range(5, 11).mapToObj(i -> String.valueOf(Math.pow(2, i))).collect(Collectors.toList());
             }
             else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
                 return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
             }
-            else if (args[0].equalsIgnoreCase("blocksPerTick")) { // 64 -> 1024
+            else if (args[0].equalsIgnoreCase("blocksPerTick")) { // 64, 128, 256... 1024
                 return IntStream.range(6, 10).mapToObj(i -> String.valueOf(Math.pow(2, i))).collect(Collectors.toList());
             }
         }
