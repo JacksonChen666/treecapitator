@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -104,7 +103,7 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                 }
                 else if (args[0].equalsIgnoreCase("blocksPerTick")) {
                     BreakingBlocks.blocksPerTick = number;
-                    plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.cooldown);
+                    plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.blocksPerTick);
                     try {
                         plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
                     }
@@ -112,7 +111,7 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                         commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
                         e.printStackTrace();
                     }
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
                 }
                 else {
                     commandSender.sendMessage("Unknown setting.");
@@ -126,24 +125,19 @@ public class TreeCap implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.toString().equalsIgnoreCase(commandName)) {
-            if (args.length == 0) {
-                List<String> tabComplete = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
-                tabComplete.addAll(arg2No0);
-                return tabComplete;
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("maxLogs")) { // 32 -> 2048
+                return IntStream.range(5, 11).mapToObj(i -> String.valueOf(Math.pow(2, i))).collect(Collectors.toList());
             }
-            else if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("maxLogs".toLowerCase())) {
-                    return IntStream.range(0, dangerThreshold).mapToObj(String::valueOf).collect(Collectors.toList());
-                }
-                else if (args[0].equalsIgnoreCase("cooldown")) {
-                    return IntStream.range(0, 10).mapToObj(String::valueOf).collect(Collectors.toList());
-                }
+            else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
+                return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
             }
-            else {
-                return Collections.emptyList();
+            else if (args[0].equalsIgnoreCase("blocksPerTick")) { // 64 -> 1024
+                return IntStream.range(6, 10).mapToObj(i -> String.valueOf(Math.pow(2, i))).collect(Collectors.toList());
             }
         }
-        return null;
+        List<String> tabComplete = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
+        tabComplete.addAll(arg2No0);
+        return tabComplete;
     }
 }

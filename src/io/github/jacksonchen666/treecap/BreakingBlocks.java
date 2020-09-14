@@ -52,7 +52,7 @@ public class BreakingBlocks extends BukkitRunnable {
             blocksToBreak.addAll(newToSearch);
             toSearch = newToSearch;
         }
-        return blocksToBreak.size() > maximum ? blocksToBreak.subList(0, maximum) : blocksToBreak;
+        return blocksToBreak;
     }
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
@@ -69,11 +69,11 @@ public class BreakingBlocks extends BukkitRunnable {
     public void run() {
         long start = System.nanoTime();
         for (int i = 0; i < (blocksPerTick > blockCount ? blocksPerTick : blockCount / 10); i++) {
-            if (its.hasNext()) {
-                int amount = amounts.getOrDefault(player, 0);
+            int amount = amounts.getOrDefault(player, 0);
+            if (maximum > amount && its.hasNext()) {
                 Block block = its.next();
                 if (block.breakNaturally(tool)) {
-                    amounts.put(player, amount);
+                    amounts.put(player, amount + 1);
                 }
             }
             else {
