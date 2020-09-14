@@ -24,20 +24,20 @@ public class TreeCap implements CommandExecutor, TabCompleter {
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
-    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksPerTick");
-    private final Main plugin;
+    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksPerTick", "searchTimeoutSeconds");
+    private static Main plugin;
 
     public TreeCap(Main plugin) {
-        this.plugin = plugin;
+        TreeCap.plugin = plugin;
 
         Objects.requireNonNull(plugin.getCommand(commandName)).setExecutor(this);
     }
 
-    public String getText(String path) {
+    public static String getText(String path) {
         return plugin.getConfig().getString(path);
     }
 
-    public String getText(String path, String prefix) {
+    public static String getText(String path, String prefix) {
         return Objects.requireNonNull(plugin.getConfig().getString(path)).replace("{prefix}", prefix);
     }
 
@@ -112,6 +112,18 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                         e.printStackTrace();
                     }
                     commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
+                }
+                else if (args[0].equalsIgnoreCase("searchTimeoutSeconds")) {
+                    BreakingBlocks.searchTimeoutSeconds = number;
+                    plugin.getConfig().set("settings.searchTimeoutSeconds", BreakingBlocks.searchTimeoutSeconds);
+                    try {
+                        plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
+                    }
+                    catch (IOException e) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
+                        e.printStackTrace();
+                    }
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_searchTimeoutSeconds", prefix).replace("{amount}", String.valueOf(BreakingBlocks.searchTimeoutSeconds))));
                 }
                 else {
                     commandSender.sendMessage("Unknown setting.");

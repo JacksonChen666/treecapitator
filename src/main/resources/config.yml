@@ -5,11 +5,14 @@ messages:
   player_not_found: '{prefix} &c{player} is not online!'
   number_required: '{prefix} &cMust be a number'
   save_failed: '{prefix} &4Saving config failed. Config changes may be lost. Please check the console!'
+  search_timeout: '{prefix} &cFailed to cut down the tree within {seconds} seconds. Sorry!'
   set_maxLogs: '{prefix} &aSet max logs to cut to {amount}'
   set_cooldown: '{prefix} &aSet cooldown to {amount} seconds'
   set_blocksPerTick: '{prefix} &aSet block to break per tick to {amount}'
+  set_maxSearchSeconds: '{prefix} &aSet max seconds for search to {amount}'
   get_axe: '{prefix} Ok, here is your axe.'
 settings:
   maxLogs: 32 # Limit to how many logs it can do.
   cooldown: 2 # Seconds before the axe can be used to cut more.
   blocksPerTick: 256 # The lower the more responsive the server, but the more time to complete. Only used if the total logs is more than this number.
+  maxSearchSeconds: 20 # Seconds before search is aborted

@@ -11,6 +11,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.time.LocalTime;
 import java.util.*;
 
+import static io.github.jacksonchen666.treecap.TreeCap.getText;
+
 public class BreakingBlocks extends BukkitRunnable {
     public static final Material[] acceptableBlock = {
             Material.ACACIA_LOG, Material.BIRCH_LOG, Material.DARK_OAK_LOG, Material.JUNGLE_LOG, Material.OAK_LOG,
@@ -23,6 +25,8 @@ public class BreakingBlocks extends BukkitRunnable {
     public static int maximum = 32;
     public static int cooldown = 2;
     public static int blocksPerTick = 256; // amount to break in every tick
+    public static int searchTimeoutSeconds = 20;
+    private static long startTime;
     private final Iterator<Block> its;
     private final ItemStack tool;
     private final Player player;
@@ -36,13 +40,25 @@ public class BreakingBlocks extends BukkitRunnable {
         this.player = player;
     }
 
-    public static List<Block> searchAroundBlocks(final Block target, final Player player, final Material chosenBlock) {
+    public static List<Block> searchAroundBlocks(final Block target, final Material chosenBlock, final Player player) {
         List<Block> blocksToBreak = new ArrayList<>();
         List<Block> toSearch = new ArrayList<>();
         toSearch.add(target);
         while (maximum > blocksToBreak.size() && toSearch.size() > 0) {
             List<Block> newToSearch = new ArrayList<>();
-            toSearch.stream().map(search -> getBlocks(search, 1)).forEach(newToSearch::addAll);
+            for (Block search : toSearch) {
+                ArrayList<Block> blocks;
+                try {
+                    startTime = System.nanoTime();
+                    blocks = getBlocks(search, 1);
+                }
+                catch (SearchTimeoutException e) {
+                    e.printStackTrace();
+                    player.sendMessage(ChatColors.color(getText("search_timeout", getText("prefix")).replace("{seconds}", String.valueOf(searchTimeoutSeconds))));
+                    return Collections.emptyList();
+                }
+                newToSearch.addAll(blocks);
+            }
             newToSearch.removeIf(block -> block.getType() != chosenBlock);
             blocksToBreak.addAll(newToSearch);
             toSearch = newToSearch;
@@ -56,8 +72,12 @@ public class BreakingBlocks extends BukkitRunnable {
         ArrayList<Block> blocks = new ArrayList<>();
         for (double x = start.getX() - radius; x <= start.getX() + radius; x++)
             for (double y = start.getY() - radius; y <= start.getY() + radius; y++)
-                for (double z = start.getZ() - radius; z <= start.getZ() + radius; z++)
+                for (double z = start.getZ() - radius; z <= start.getZ() + radius; z++) {
+                    if ((System.nanoTime() - startTime) / 1E+6 / 1000 > searchTimeoutSeconds) {
+                        throw new SearchTimeoutException("Took more than " + searchTimeoutSeconds + " seconds to get all blocks");
+                    }
                     blocks.add(new Location(start.getWorld(), x, y, z).getBlock());
+                }
         return blocks;
     }
 
