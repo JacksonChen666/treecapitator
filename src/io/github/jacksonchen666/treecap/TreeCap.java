@@ -20,12 +20,12 @@ import java.util.stream.IntStream;
 @org.bukkit.plugin.java.annotation.command.Command(name = "treecap", desc = "Get a Tree Capitator, give others players, and settings.")
 public class TreeCap implements CommandExecutor, TabCompleter {
     public static final String commandName = "treecap";
-    public static final int dangerThreshold = 1024;
+    public static final int dangerThreshold = 1048576;
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
-    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
+    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksPerTick");
     private final Main plugin;
 
     public TreeCap(Main plugin) {
@@ -67,38 +67,52 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                 }
             }
             else {
+                int number;
+                try {
+                    number = Integer.parseInt(args[1]);
+                }
+                catch (NumberFormatException e) {
+                    commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
+                    return false;
+                }
                 if (args[0].equalsIgnoreCase("maxLogs")) {
-                    try {
-                        BreakingBlocks.maximum = Integer.parseInt(args[1]);
-                        if (BreakingBlocks.maximum > dangerThreshold) {
-                            commandSender.sendMessage(warningMessage);
-                        }
-                        plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maximum);
-                        plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
-                        commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maximum))));
+                    BreakingBlocks.maximum = number;
+                    if (BreakingBlocks.maximum > dangerThreshold) {
+                        commandSender.sendMessage(warningMessage);
                     }
-                    catch (NumberFormatException e) {
-                        commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
-                        return false;
+                    plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maximum);
+                    try {
+                        plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
                     }
                     catch (IOException e) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
                         e.printStackTrace();
                     }
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maximum))));
                 }
                 else if (args[0].equalsIgnoreCase("cooldown")) {
+                    BreakingBlocks.cooldown = number;
+                    plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
                     try {
-                        BreakingBlocks.cooldown = Integer.parseInt(args[1]);
-                        plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
                         plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
-                        commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
-                    }
-                    catch (NumberFormatException e) {
-                        commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
-                        return false;
                     }
                     catch (IOException e) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
                         e.printStackTrace();
                     }
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
+                }
+                else if (args[0].equalsIgnoreCase("blocksPerTick")) {
+                    BreakingBlocks.blocksPerTick = number;
+                    plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.cooldown);
+                    try {
+                        plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
+                    }
+                    catch (IOException e) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
+                        e.printStackTrace();
+                    }
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                 }
                 else {
                     commandSender.sendMessage("Unknown setting.");

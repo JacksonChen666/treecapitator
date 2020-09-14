@@ -14,8 +14,9 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        BreakingBlocks.maximum = this.getConfig().getInt("settings.maxLogs");
-        BreakingBlocks.cooldown = this.getConfig().getInt("settings.cooldown");
+        BreakingBlocks.maximum = getConfig().getInt("settings.maxLogs");
+        BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
+        BreakingBlocks.blocksPerTick = getConfig().getInt("settings.blocksPerTick");
         new TreeCap(this);
         getServer().getPluginManager().registerEvents(new Listener(this), this);
     }
