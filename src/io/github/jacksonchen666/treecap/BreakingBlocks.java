@@ -25,7 +25,7 @@ public class BreakingBlocks extends BukkitRunnable {
     public static int maxLogs = 32;
     public static int cooldown = 2;
     public static int blocksPerTick = 256; // amount to break in every tick
-    public static int searchTimeoutSeconds = 20;
+    public static int searchTimeout = 20;
     private static long startTime;
     private final Iterator<Block> its;
     private final ItemStack tool;
@@ -54,7 +54,7 @@ public class BreakingBlocks extends BukkitRunnable {
                 }
                 catch (SearchTimeoutException e) {
                     e.printStackTrace();
-                    player.sendMessage(ChatColors.color(getText("search_timeout", getText("prefix")).replace("{seconds}", String.valueOf(searchTimeoutSeconds))));
+                    player.sendMessage(ChatColors.color(getText("search_timeout", getText("prefix")).replace("{seconds}", String.valueOf(searchTimeout))));
                     return Collections.emptyList();
                 }
                 newToSearch.addAll(blocks);
@@ -73,8 +73,8 @@ public class BreakingBlocks extends BukkitRunnable {
         for (double x = start.getX() - radius; x <= start.getX() + radius; x++)
             for (double y = start.getY() - radius; y <= start.getY() + radius; y++)
                 for (double z = start.getZ() - radius; z <= start.getZ() + radius; z++) {
-                    if ((System.nanoTime() - startTime) / 1E+6 / 1000 > searchTimeoutSeconds) {
-                        throw new SearchTimeoutException("Took more than " + searchTimeoutSeconds + " seconds to get all blocks");
+                    if ((System.nanoTime() - startTime) / 1E+6 / 1000 > searchTimeout) {
+                        throw new SearchTimeoutException("Took more than " + searchTimeout + " seconds to get all blocks");
                     }
                     blocks.add(new Location(start.getWorld(), x, y, z).getBlock());
                 }

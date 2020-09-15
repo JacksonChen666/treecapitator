@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class TreeCap implements CommandExecutor, TabCompleter {
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
-    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksPerTick", "searchTimeoutSeconds");
+    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksPerTick", "searchTimeout");
     private static Main plugin;
 
     public TreeCap(Main plugin) {
@@ -74,34 +75,32 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                     commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
                     return false;
                 }
-                switch (args[0].toLowerCase()) {
-                    case "maxlogs" -> {
-                        BreakingBlocks.maxLogs = number;
-                        if (BreakingBlocks.maxLogs > dangerThreshold) {
-                            commandSender.sendMessage(warningMessage);
-                        }
-                        plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maxLogs);
-                        commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maxLogs))));
+                if (args[0].equalsIgnoreCase("maxLogs")) {
+                    BreakingBlocks.maxLogs = number;
+                    if (BreakingBlocks.maxLogs > dangerThreshold) {
+                        commandSender.sendMessage(warningMessage);
                     }
-                    case "cooldown" -> {
-                        BreakingBlocks.cooldown = number;
-                        plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
-                        commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
-                    }
-                    case "blockspertick" -> {
-                        BreakingBlocks.blocksPerTick = number;
-                        plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.blocksPerTick);
-                        commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
-                    }
-                    case "searchtimeoutseconds" -> {
-                        BreakingBlocks.searchTimeoutSeconds = number;
-                        plugin.getConfig().set("settings.searchTimeoutSeconds", BreakingBlocks.searchTimeoutSeconds);
-                        commandSender.sendMessage(ChatColors.color(getText("messages.set_searchTimeoutSeconds", prefix).replace("{amount}", String.valueOf(BreakingBlocks.searchTimeoutSeconds))));
-                    }
-                    default -> {
-                        commandSender.sendMessage("Unknown setting.");
-                        return false;
-                    }
+                    plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maxLogs);
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maxLogs))));
+                }
+                else if (args[0].equalsIgnoreCase("cooldown")) {
+                    BreakingBlocks.cooldown = number;
+                    plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
+                }
+                else if (args[0].equalsIgnoreCase("blocksPerTick")) {
+                    BreakingBlocks.blocksPerTick = number;
+                    plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.blocksPerTick);
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
+                }
+                else if (args[0].equalsIgnoreCase("searchTimeout")) {
+                    BreakingBlocks.searchTimeout = number;
+                    plugin.getConfig().set("settings.searchTimeout", BreakingBlocks.searchTimeout);
+                    commandSender.sendMessage(ChatColors.color(getText("messages.set_searchTimeout", prefix).replace("{amount}", String.valueOf(BreakingBlocks.searchTimeout))));
+                }
+                else {
+                    commandSender.sendMessage("Unknown setting.");
+                    return false;
                 }
                 try {
                     plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
@@ -118,16 +117,25 @@ public class TreeCap implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1) {
+        if (args.length - 1 == 1) {
             if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
-                return IntStream.range(5, 11).mapToObj(i -> String.valueOf(Math.pow(2, i))).collect(Collectors.toList());
+                return IntStream.range(5, 11).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
             }
             else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
                 return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
             }
             else if (args[0].equalsIgnoreCase("blocksPerTick")) { // 64, 128, 256... 1024
-                return IntStream.range(6, 10).mapToObj(i -> String.valueOf(Math.pow(2, i))).collect(Collectors.toList());
+                return IntStream.range(6, 10).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
             }
+            else if (args[0].equalsIgnoreCase("searchTimeout")) { // 5, 10, 15... 30
+                return IntStream.iterate(5, i -> i < 30, i -> i + 5).mapToObj(String::valueOf).collect(Collectors.toList());
+            }
+            else {
+                return Collections.emptyList();
+            }
+        }
+        else if (args.length - 1 == 2) {
+            return Collections.emptyList();
         }
         List<String> tabComplete = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
         tabComplete.addAll(arg2No0);
