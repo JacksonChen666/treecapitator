@@ -11,9 +11,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Get cached gradle files
         uses: actions/cache@v2
@@ -35,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: tree-capitator plugin
-          path: build/libs/tree-capitator-*.jar
+          path: build/libs/*
