@@ -32,7 +32,7 @@ public class Listener implements org.bukkit.event.Listener {
         for (ItemStack hand : handsItem) {
             if (LocalTime.now().isAfter(cooldownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
                     hand.getType() == Material.GOLDEN_AXE &&
-                    CustomItemManager.isCustomItem(hand, Treecapitator.itemName, Treecapitator.lore) &&
+                    CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) &&
                     Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
                 new BreakingBlocks(block, player).runTaskTimer(plugin, 1L, 1L);
                 break;

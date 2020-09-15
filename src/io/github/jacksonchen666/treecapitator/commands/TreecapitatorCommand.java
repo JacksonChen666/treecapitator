@@ -20,8 +20,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@org.bukkit.plugin.java.annotation.command.Command(name = "treecapitator", desc = "Get a Treecapitator, give others players, and settings.")
-public class TreeCap implements CommandExecutor, TabCompleter {
+@org.bukkit.plugin.java.annotation.command.Command(name = "treecapitator", desc = "Get a TreecapitatorItem, give others players, and settings.")
+public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
     public static final int dangerThreshold = 16384;
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
@@ -31,8 +31,8 @@ public class TreeCap implements CommandExecutor, TabCompleter {
     private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
     private static Main plugin;
 
-    public TreeCap(Main plugin) {
-        TreeCap.plugin = plugin;
+    public TreecapitatorCommand(Main plugin) {
+        TreecapitatorCommand.plugin = plugin;
 
         Objects.requireNonNull(plugin.getCommand(COMMAND_NAME)).setExecutor(this);
     }
@@ -57,12 +57,12 @@ public class TreeCap implements CommandExecutor, TabCompleter {
             }
 
             if (args.length == 0) {
-                Treecapitator.giveItem((Player) commandSender);
+                TreecapitatorItem.giveItem((Player) commandSender);
                 commandSender.sendMessage(ChatColors.color(getText("messages.get_axe", prefix)));
             }
             else if (args.length == 1) {
                 try {
-                    Treecapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
+                    TreecapitatorItem.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
                 }
                 catch (NullPointerException e1) {
                     commandSender.sendMessage(ChatColors.color(getText("messages.player_not_found", prefix).replace("{player}", args[0])));

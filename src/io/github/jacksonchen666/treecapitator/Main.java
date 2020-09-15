@@ -1,6 +1,6 @@
 package io.github.jacksonchen666.treecapitator;
 
-import io.github.jacksonchen666.treecapitator.commands.TreeCap;
+import io.github.jacksonchen666.treecapitator.commands.TreecapitatorCommand;
 import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.processings.Listener;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 
-@Plugin(name = "TreeCap", version = "1.0.0")
+@Plugin(name = "TreecapitatorCommand", version = "1.0.0")
 @Description(value = "Capitates trees just like Hypixel")
 public class Main extends JavaPlugin {
     @Override
@@ -19,7 +19,7 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
         BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
-        new TreeCap(this);
+        new TreecapitatorCommand(this);
         getServer().getPluginManager().registerEvents(new Listener(this), this);
     }
 

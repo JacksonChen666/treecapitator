@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 
-public class Treecapitator {
-    public static final String itemName = "Treecapitator";
+public class TreecapitatorItem {
+    public static final String itemName = "TreecapitatorItem";
     public static final List<String> lore = Arrays.asList(
-            ChatColor.DARK_PURPLE.toString() + "Treecapitator",
+            ChatColor.DARK_PURPLE.toString() + "TreecapitatorItem",
             ChatColor.GRAY.toString() + "A forceful Gold Axe which can",
             ChatColor.GRAY.toString() + "break a large amount of logs in",
             ChatColor.GRAY.toString() + "a single hit!",
