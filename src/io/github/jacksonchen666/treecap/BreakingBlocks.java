@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalTime;
@@ -27,29 +26,41 @@ public class BreakingBlocks extends BukkitRunnable {
     public static int blocksPerTick = 256; // amount to break in every tick
     public static int searchTimeout = 20;
     private static long startTime;
-    private final Iterator<Block> its;
-    private final ItemStack tool;
+    private static Material chosenBlock;
     private final Player player;
     private final int blockCount;
     private final List<Long> timeSpentEachTime = new ArrayList<>();
+    private Iterator<Block> its;
+    private Iterator<Block> itsOld = Collections.emptyIterator();
+    private List<Block> listThing;
+    private List<Block> oldListThing;
 
-    public BreakingBlocks(List<Block> blocks, ItemStack tool, Player player) {
+    public BreakingBlocks(List<Block> blocks, Player player) {
         its = blocks.iterator();
+        listThing = blocks;
         blockCount = blocks.size();
-        this.tool = tool;
         this.player = player;
     }
 
-    public static List<Block> searchAroundBlocks(final Block target, final Material chosenBlock, final Player player) {
+    public static List<Block> searchAroundBlocks(final Block target, final Player player, boolean changeChosenBlock) {
+        return searchAroundBlocks(target, player, amounts.getOrDefault(player, 0), changeChosenBlock);
+    }
+
+    public static List<Block> searchAroundBlocks(final Block target, final Player player, final int amount, boolean changeChosenBlock) {
+        Bukkit.getLogger().info("[TreeCap] " + player.getName() + " cut a tree with a maximum limit of " + maxLogs + ". Searching...");
+        long start = System.nanoTime();
         List<Block> blocksToBreak = new ArrayList<>();
         List<Block> toSearch = new ArrayList<>();
         toSearch.add(target);
-        while (maxLogs > blocksToBreak.size() && toSearch.size() > 0) {
+        if (changeChosenBlock) {
+            chosenBlock = target.getType();
+        }
+        while (maxLogs > blocksToBreak.size() + amount && toSearch.size() > 0) {
             List<Block> newToSearch = new ArrayList<>();
             for (Block search : toSearch) {
-                ArrayList<Block> blocks;
+                List<Block> blocks;
+                startTime = System.nanoTime();
                 try {
-                    startTime = System.nanoTime();
                     blocks = getBlocks(search, 1);
                 }
                 catch (SearchTimeoutException e) {
@@ -59,11 +70,12 @@ public class BreakingBlocks extends BukkitRunnable {
                 }
                 newToSearch.addAll(blocks);
             }
-            newToSearch.removeIf(block -> block.getType() != chosenBlock);
             blocksToBreak.addAll(newToSearch);
             toSearch = newToSearch;
         }
         blocksToBreak.removeIf(block -> block.getType() != chosenBlock);
+        long end = System.nanoTime();
+        Bukkit.getLogger().info("[TreeCap] Finished searching for " + player.getName() + " in " + (end - start) / 1e+6 + "ms, breaking " + maxLogs + "/" + blocksToBreak.size() + " logs...");
         return blocksToBreak;
     }
 
@@ -86,22 +98,40 @@ public class BreakingBlocks extends BukkitRunnable {
         long start = System.nanoTime();
         for (int i = 0; i < (blocksPerTick > blockCount ? blocksPerTick : blockCount / 10); i++) {
             int amount = amounts.getOrDefault(player, 0);
-            if (maxLogs > amount && its.hasNext()) {
-                Block block = its.next();
-                if (block.breakNaturally(tool)) {
-                    amounts.put(player, amount + 1);
+            if (its.hasNext()) {
+                if (maxLogs > amount) {
+                    Block block = its.next();
+                    if (block.getType() == chosenBlock && block.breakNaturally()) {
+                        amounts.put(player, amount + 1);
+                    }
+                }
+                else {
+                    long end = System.nanoTime();
+                    timeSpentEachTime.add(end - start);
+                    long nanoTimeSpent = timeSpentEachTime.stream().mapToLong(nanoTime -> nanoTime).sum();
+
+                    Bukkit.getLogger().info("[Treecap] Finished cutting " + amount + " logs for " + player.getName() + ", took " + (nanoTimeSpent / 1E+6) + "ms (average " + (nanoTimeSpent / timeSpentEachTime.size() / 1E+6) + "ms).");
+                    coolDownTo.put(player, LocalTime.now().plusSeconds(cooldown));
+                    amounts.remove(player);
+                    this.cancel();
+                    return;
                 }
             }
             else {
                 long end = System.nanoTime();
                 timeSpentEachTime.add(end - start);
-                long nanoTimeSpent = timeSpentEachTime.stream().mapToLong(nanoTime -> nanoTime).sum();
-
-                Bukkit.getLogger().info("[Treecap] Finished cutting " + amount + " logs for " + player.getName() + ", took " + (nanoTimeSpent / 1E+6) + "ms (average " + (nanoTimeSpent / timeSpentEachTime.size() / 1E+6) + "ms).");
-                coolDownTo.put(player, LocalTime.now().plusSeconds(cooldown));
-                amounts.remove(player);
-                this.cancel();
-                return;
+                if (maxLogs > amount && listThing.size() > 0 && itsOld.hasNext()) {
+                    if (!its.hasNext()) {
+                        oldListThing = listThing;
+                        itsOld = oldListThing.iterator();
+                    }
+                    listThing = searchAroundBlocks(itsOld.next(), player, false); // this thing searches for air instead of the intended block type
+                    its = listThing.iterator();
+                }
+                else if (listThing.size() == 0) {
+                    //noinspection UnusedAssignment because it will continue looping every tick
+                    amount = maxLogs;
+                }
             }
         }
         long end = System.nanoTime();
