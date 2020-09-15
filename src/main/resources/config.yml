@@ -14,5 +14,3 @@ messages:
 settings:
   maxLogs: 32 # Limit to how many logs it can do.
   cooldown: 2 # Seconds before the axe can be used to cut more.
-  blocksPerTick: 256 # The lower the more responsive the server, but the more time to complete. Only used if the total logs is more than this number.
-  searchTimeout: 20 # Seconds before search is aborted

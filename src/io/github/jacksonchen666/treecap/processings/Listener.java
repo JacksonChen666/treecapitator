@@ -14,7 +14,8 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.github.jacksonchen666.treecap.processings.BreakingBlocks.*;
+import static io.github.jacksonchen666.treecap.processings.BreakingBlocks.acceptableBlock;
+import static io.github.jacksonchen666.treecap.processings.BreakingBlocks.cooldownTo;
 
 public class Listener implements org.bukkit.event.Listener {
     private final JavaPlugin plugin;
@@ -26,15 +27,16 @@ public class Listener implements org.bukkit.event.Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        List<ItemStack> handsItem = Arrays.asList(player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand());
         Block block = event.getBlock();
-        if (LocalTime.now().isAfter(coolDownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
-                mainHand.getType() == Material.GOLDEN_AXE &&
-                CustomItemManager.isCustomItem(mainHand, TreeCapitator.itemName, TreeCapitator.lore) &&
-                Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
-            List<Block> blockList = searchAroundBlocks(block, player, true);
-            BreakingBlocks task = new BreakingBlocks(blockList, player);
-            task.runTaskTimer(plugin, 1L, 1L);
+        for (ItemStack hand : handsItem) {
+            if (LocalTime.now().isAfter(cooldownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
+                    hand.getType() == Material.GOLDEN_AXE &&
+                    CustomItemManager.isCustomItem(hand, TreeCapitator.itemName, TreeCapitator.lore) &&
+                    Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
+                new BreakingBlocks(block, player).runTaskTimer(plugin, 1L, 1L);
+                break;
+            }
         }
     }
 }

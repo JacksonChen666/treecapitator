@@ -19,7 +19,6 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
         BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
-        BreakingBlocks.blocksPerTick = getConfig().getInt("settings.blocksPerTick");
         new TreeCap(this);
         getServer().getPluginManager().registerEvents(new Listener(this), this);
     }

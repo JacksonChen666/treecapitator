@@ -20,21 +20,21 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@org.bukkit.plugin.java.annotation.command.Command(name = "treecap", desc = "Get a Tree Capitator, give others players, and settings.")
+@org.bukkit.plugin.java.annotation.command.Command(name = TreeCap.COMMAND_NAME, desc = "Get a Tree Capitator, give others players, and settings.")
 public class TreeCap implements CommandExecutor, TabCompleter {
-    public static final String commandName = "treecap";
+    public static final String COMMAND_NAME = "treecap";
     public static final int dangerThreshold = 16384;
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
-    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksPerTick", "searchTimeout");
+    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
     private static Main plugin;
 
     public TreeCap(Main plugin) {
         TreeCap.plugin = plugin;
 
-        Objects.requireNonNull(plugin.getCommand(commandName)).setExecutor(this);
+        Objects.requireNonNull(plugin.getCommand(COMMAND_NAME)).setExecutor(this);
     }
 
     public static String getText(String path) {
@@ -47,7 +47,7 @@ public class TreeCap implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (s.equalsIgnoreCase(commandName)) {
+        if (s.equalsIgnoreCase(COMMAND_NAME)) {
             String prefix = getText("prefix");
             if (!(commandSender instanceof Player)) {
                 if (args.length == 0) {
@@ -91,16 +91,6 @@ public class TreeCap implements CommandExecutor, TabCompleter {
                     plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
                     commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                 }
-                else if (args[0].equalsIgnoreCase("blocksPerTick")) {
-                    BreakingBlocks.blocksPerTick = number;
-                    plugin.getConfig().set("settings.blocksPerTick", BreakingBlocks.blocksPerTick);
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_blocksPerTick", prefix).replace("{amount}", String.valueOf(BreakingBlocks.blocksPerTick))));
-                }
-                else if (args[0].equalsIgnoreCase("searchTimeout")) {
-                    BreakingBlocks.searchTimeout = number;
-                    plugin.getConfig().set("settings.searchTimeout", BreakingBlocks.searchTimeout);
-                    commandSender.sendMessage(ChatColors.color(getText("messages.set_searchTimeout", prefix).replace("{amount}", String.valueOf(BreakingBlocks.searchTimeout))));
-                }
                 else {
                     commandSender.sendMessage("Unknown setting.");
                     return false;
@@ -126,12 +116,6 @@ public class TreeCap implements CommandExecutor, TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
                 return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
-            }
-            else if (args[0].equalsIgnoreCase("blocksPerTick")) { // 64, 128, 256... 1024
-                return IntStream.range(6, 10).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
-            }
-            else if (args[0].equalsIgnoreCase("searchTimeout")) { // 5, 10, 15... 30
-                return IntStream.iterate(5, i -> i < 30, i -> i + 5).mapToObj(String::valueOf).collect(Collectors.toList());
             }
             else {
                 return Collections.emptyList();
