@@ -1,4 +1,4 @@
-package io.github.jacksonchen666.treecap;
+package io.github.jacksonchen666.treecap.utils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

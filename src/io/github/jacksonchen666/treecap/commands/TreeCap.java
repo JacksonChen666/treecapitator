@@ -1,5 +1,8 @@
-package io.github.jacksonchen666.treecap;
+package io.github.jacksonchen666.treecap.commands;
 
+import io.github.jacksonchen666.treecap.Main;
+import io.github.jacksonchen666.treecap.processings.BreakingBlocks;
+import io.github.jacksonchen666.treecap.utils.ChatColors;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

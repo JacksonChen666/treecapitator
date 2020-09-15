@@ -1,5 +1,7 @@
-package io.github.jacksonchen666.treecap;
+package io.github.jacksonchen666.treecap.processings;
 
+import io.github.jacksonchen666.treecap.commands.TreeCapitator;
+import io.github.jacksonchen666.treecap.utils.CustomItemManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -12,7 +14,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.github.jacksonchen666.treecap.BreakingBlocks.*;
+import static io.github.jacksonchen666.treecap.processings.BreakingBlocks.*;
 
 public class Listener implements org.bukkit.event.Listener {
     private final JavaPlugin plugin;

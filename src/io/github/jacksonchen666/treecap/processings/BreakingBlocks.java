@@ -1,5 +1,7 @@
-package io.github.jacksonchen666.treecap;
+package io.github.jacksonchen666.treecap.processings;
 
+import io.github.jacksonchen666.treecap.exceptions.SearchTimeoutException;
+import io.github.jacksonchen666.treecap.utils.ChatColors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,7 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.time.LocalTime;
 import java.util.*;
 
-import static io.github.jacksonchen666.treecap.TreeCap.getText;
+import static io.github.jacksonchen666.treecap.commands.TreeCap.getText;
 
 public class BreakingBlocks extends BukkitRunnable {
     public static final Material[] acceptableBlock = {
