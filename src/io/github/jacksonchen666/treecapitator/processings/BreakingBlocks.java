@@ -1,4 +1,4 @@
-package io.github.jacksonchen666.treecap.processings;
+package io.github.jacksonchen666.treecapitator.processings;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

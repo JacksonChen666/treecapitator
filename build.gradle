@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'io.github.jacksonchen666.treecap'
+group 'io.github.jacksonchen666.treecapitator'
 version '1.0.0'
 
 repositories {

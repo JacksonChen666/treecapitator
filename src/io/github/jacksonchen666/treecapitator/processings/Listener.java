@@ -1,7 +1,7 @@
-package io.github.jacksonchen666.treecap.processings;
+package io.github.jacksonchen666.treecapitator.processings;
 
-import io.github.jacksonchen666.treecap.commands.TreeCapitator;
-import io.github.jacksonchen666.treecap.utils.CustomItemManager;
+import io.github.jacksonchen666.treecapitator.commands.Treecapitator;
+import io.github.jacksonchen666.treecapitator.utils.CustomItemManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,8 +14,8 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.github.jacksonchen666.treecap.processings.BreakingBlocks.acceptableBlock;
-import static io.github.jacksonchen666.treecap.processings.BreakingBlocks.cooldownTo;
+import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.acceptableBlock;
+import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
 
 public class Listener implements org.bukkit.event.Listener {
     private final JavaPlugin plugin;
@@ -32,7 +32,7 @@ public class Listener implements org.bukkit.event.Listener {
         for (ItemStack hand : handsItem) {
             if (LocalTime.now().isAfter(cooldownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
                     hand.getType() == Material.GOLDEN_AXE &&
-                    CustomItemManager.isCustomItem(hand, TreeCapitator.itemName, TreeCapitator.lore) &&
+                    CustomItemManager.isCustomItem(hand, Treecapitator.itemName, Treecapitator.lore) &&
                     Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
                 new BreakingBlocks(block, player).runTaskTimer(plugin, 1L, 1L);
                 break;

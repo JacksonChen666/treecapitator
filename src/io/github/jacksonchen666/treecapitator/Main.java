@@ -1,8 +1,8 @@
-package io.github.jacksonchen666.treecap;
+package io.github.jacksonchen666.treecapitator;
 
-import io.github.jacksonchen666.treecap.commands.TreeCap;
-import io.github.jacksonchen666.treecap.processings.BreakingBlocks;
-import io.github.jacksonchen666.treecap.processings.Listener;
+import io.github.jacksonchen666.treecapitator.commands.TreeCap;
+import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
+import io.github.jacksonchen666.treecapitator.processings.Listener;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.Description;

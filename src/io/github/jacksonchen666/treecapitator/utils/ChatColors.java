@@ -1,4 +1,4 @@
-package io.github.jacksonchen666.treecap.utils;
+package io.github.jacksonchen666.treecapitator.utils;
 
 import org.bukkit.ChatColor;
 

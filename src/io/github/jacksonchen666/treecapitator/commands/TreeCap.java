@@ -1,8 +1,8 @@
-package io.github.jacksonchen666.treecap.commands;
+package io.github.jacksonchen666.treecapitator.commands;
 
-import io.github.jacksonchen666.treecap.Main;
-import io.github.jacksonchen666.treecap.processings.BreakingBlocks;
-import io.github.jacksonchen666.treecap.utils.ChatColors;
+import io.github.jacksonchen666.treecapitator.Main;
+import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
+import io.github.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,9 +20,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@org.bukkit.plugin.java.annotation.command.Command(name = TreeCap.COMMAND_NAME, desc = "Get a Tree Capitator, give others players, and settings.")
+@org.bukkit.plugin.java.annotation.command.Command(name = TreeCap.COMMAND_NAME, desc = "Get a Treecapitator, give others players, and settings.")
 public class TreeCap implements CommandExecutor, TabCompleter {
-    public static final String COMMAND_NAME = "treecap";
+    public static final String COMMAND_NAME = "treecapitator";
     public static final int dangerThreshold = 16384;
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
@@ -57,12 +57,12 @@ public class TreeCap implements CommandExecutor, TabCompleter {
             }
 
             if (args.length == 0) {
-                TreeCapitator.giveItem((Player) commandSender);
+                Treecapitator.giveItem((Player) commandSender);
                 commandSender.sendMessage(ChatColors.color(getText("messages.get_axe", prefix)));
             }
             else if (args.length == 1) {
                 try {
-                    TreeCapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
+                    Treecapitator.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
                 }
                 catch (NullPointerException e1) {
                     commandSender.sendMessage(ChatColors.color(getText("messages.player_not_found", prefix).replace("{player}", args[0])));

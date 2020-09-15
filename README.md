@@ -1,4 +1,4 @@
-# tree-capitator
+# treecapitator
 
 This is Hypixel's tree capitator thing except I made this because ~~I'm bored~~ I just got this idea.
 
