@@ -22,8 +22,7 @@ public class Treecapitator {
     );
 
     public static void giveItem(Player player) {
-        ItemStack item = createItem();
-        player.getInventory().addItem(item);
+        CustomItemManager.customItem(player, new ItemStack(Material.GOLDEN_AXE), itemName, lore);
     }
 
     public static ItemStack createItem() {

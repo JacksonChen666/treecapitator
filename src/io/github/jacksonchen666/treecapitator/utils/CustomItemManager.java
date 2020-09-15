@@ -1,5 +1,6 @@
 package io.github.jacksonchen666.treecapitator.utils;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,17 +17,10 @@ public class CustomItemManager {
         return item;
     }
 
-    // --Commented out by Inspection START (2020. 09. 15. 21:03:48:797):
-    //    public static ItemStack customItem(Player player, ItemStack item, String displayName, List<String> lore) {
-    //        ItemMeta meta = item.getItemMeta();
-    //        Objects.requireNonNull(meta).setDisplayName(displayName);
-    //        meta.setLore(lore);
-    //        item.setItemMeta(meta);
-    //        player.getInventory().addItem(item);
-    //        player.updateInventory();
-    //        return item;
-    //    }
-    // --Commented out by Inspection STOP (2020. 09. 15. 21:03:48:797)
+    public static void customItem(Player player, ItemStack item, String displayName, List<String> lore) {
+        player.getInventory().addItem(customItem(item, displayName, lore));
+        player.updateInventory();
+    }
 
     // --Commented out by Inspection START (2020. 09. 15. 21:04:01:474):
     //    public static boolean isCustomItem(ItemStack item) {
