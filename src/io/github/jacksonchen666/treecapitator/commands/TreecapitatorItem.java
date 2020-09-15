@@ -10,9 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TreecapitatorItem {
-    public static final String itemName = "TreecapitatorItem";
+    public static final String itemName = ChatColor.DARK_PURPLE + "Treecapitator";
     public static final List<String> lore = Arrays.asList(
-            ChatColor.DARK_PURPLE.toString() + "TreecapitatorItem",
             ChatColor.GRAY.toString() + "A forceful Gold Axe which can",
             ChatColor.GRAY.toString() + "break a large amount of logs in",
             ChatColor.GRAY.toString() + "a single hit!",
