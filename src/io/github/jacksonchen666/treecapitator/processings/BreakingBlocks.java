@@ -20,9 +20,12 @@ public class BreakingBlocks extends BukkitRunnable {
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
+    public static int blocksPerTick = 128;
     private final Player player;
     private final List<Block> lastBreak = new ArrayList<>();
     private final List<Block> thisBreak = new ArrayList<>();
+    private final List<Block> nextBreak = new ArrayList<>();
+    private int currentBlocks = 0;
 
     public BreakingBlocks(Block brokenBlock, Player player) {
         this.player = player;
@@ -49,27 +52,42 @@ public class BreakingBlocks extends BukkitRunnable {
 
     @Override
     public void run() {
+        // TODO test without scheduling then fix and then with scheduling
         if (lastBreak.size() == 0) {
             this.cancel();
             return;
         }
+        if (nextBreak.size() != 0) {
+            for (Block block : nextBreak) {
+                processBlock(block);
+            }
+        }
         for (Block block : lastBreak) {
-            int amount = amounts.getOrDefault(player, 0);
-            if (maxLogs > amount) {
+            processBlock(block);
+        }
+        lastBreak.clear();
+        lastBreak.addAll(thisBreak);
+        thisBreak.clear();
+    }
+
+    private void processBlock(Block block) {
+        int amount = amounts.getOrDefault(player, 0);
+        if (maxLogs > amount) {
+            if (blocksPerTick > currentBlocks) {
                 if (acceptableBlock(block) && block.breakNaturally()) {
                     thisBreak.addAll(getBlocks(block, 1));
+                    currentBlocks++;
                     amount++;
                     amounts.put(player, amount);
                 }
             }
             else {
-                this.cancel();
-                return;
+                nextBreak.add(block);
             }
         }
-        lastBreak.clear();
-        lastBreak.addAll(thisBreak);
-        thisBreak.clear();
+        else {
+            this.cancel();
+        }
     }
 
     @Override

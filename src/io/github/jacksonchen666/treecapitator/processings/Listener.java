@@ -1,6 +1,6 @@
 package io.github.jacksonchen666.treecapitator.processings;
 
-import io.github.jacksonchen666.treecapitator.commands.Treecapitator;
+import io.github.jacksonchen666.treecapitator.commands.TreecapitatorItem;
 import io.github.jacksonchen666.treecapitator.utils.CustomItemManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,7 +34,8 @@ public class Listener implements org.bukkit.event.Listener {
                     hand.getType() == Material.GOLDEN_AXE &&
                     CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) &&
                     Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
-                new BreakingBlocks(block, player).runTaskTimer(plugin, 1L, 1L);
+                BreakingBlocks task = new BreakingBlocks(block, player);
+                task.runTaskTimer(plugin, 1L, 1L);
                 break;
             }
         }
