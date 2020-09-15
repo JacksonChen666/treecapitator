@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@org.bukkit.plugin.java.annotation.command.Command(name = "treecapitator", desc = "Get a TreecapitatorItem, give others players, and settings.")
+@org.bukkit.plugin.java.annotation.command.Command(name = TreecapitatorCommand.COMMAND_NAME, desc = "Get a TreecapitatorItem, give others players, and settings.")
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
     public static final int dangerThreshold = 16384;

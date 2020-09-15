@@ -1,4 +1,4 @@
-name: TreeCap
+name: Treecapitator
 main: io.github.jacksonchen666.treecapitator.Main
 author: JacksonChen666
 api-version: "1.16" # https://www.spigotmc.org/wiki/plugin-yml/
@@ -6,5 +6,5 @@ version: 1.0.0
 description: Capitates trees just like Hypixel
 
 commands:
-  treecap:
-    description: Get a Tree Capitator!
+  treecapitator:
+    description: Get a Treecapitator!
