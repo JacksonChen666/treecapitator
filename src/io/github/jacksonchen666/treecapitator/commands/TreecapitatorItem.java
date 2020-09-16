@@ -17,7 +17,7 @@ public class TreecapitatorItem {
             ChatColor.GRAY.toString() + "a single hit!",
             ChatColor.DARK_GRAY.toString() + "Cooldown: " + ChatColor.GREEN.toString() + "2s",
             "",
-            ChatColor.BOLD.toString() + ChatColor.DARK_PURPLE.toString() + "EPIC AXE"
+            ChatColor.DARK_PURPLE.toString() + "§lEPIC AXE"
     );
 
     public static void giveItem(Player player) {

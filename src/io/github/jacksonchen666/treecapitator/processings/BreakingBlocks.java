@@ -50,6 +50,22 @@ public class BreakingBlocks extends BukkitRunnable {
         return acceptableBlock(block.getType());
     }
 
+    public void breakBlocks() {
+        while (lastBreak.size() != 0) {
+            if (nextBreak.size() != 0) {
+                for (Block block : nextBreak) {
+                    processBlock(block);
+                }
+            }
+            for (Block block : lastBreak) {
+                processBlock(block);
+            }
+            lastBreak.clear();
+            lastBreak.addAll(thisBreak);
+            thisBreak.clear();
+        }
+    }
+
     @Override
     public void run() {
         // TODO test without scheduling then fix and then with scheduling
@@ -87,6 +103,23 @@ public class BreakingBlocks extends BukkitRunnable {
         }
         else {
             this.cancel();
+        }
+    }
+
+    private void processBlock2(Block block) {
+        int amount = amounts.getOrDefault(player, 0);
+        if (maxLogs > amount) {
+            if (blocksPerTick > currentBlocks) {
+                if (acceptableBlock(block) && block.breakNaturally()) {
+                    thisBreak.addAll(getBlocks(block, 1));
+                    currentBlocks++;
+                    amount++;
+                    amounts.put(player, amount);
+                }
+            }
+            else {
+                nextBreak.add(block);
+            }
         }
     }
 
