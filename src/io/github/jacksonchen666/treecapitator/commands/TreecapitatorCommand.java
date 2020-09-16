@@ -26,7 +26,6 @@ import java.util.stream.IntStream;
 import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.blocksPerTick;
 import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.getBlocks;
 
-@org.bukkit.plugin.java.annotation.command.Command(name = TreecapitatorCommand.COMMAND_NAME, desc = "Get a Treecapitator, give others players, and settings.")
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
     public static final int dangerThreshold = 16384;

@@ -22,12 +22,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.16.2-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
-//    compileOnly 'org.bukkit:bukkit:1.16.2-R0.1-SNAPSHOT' // The Bukkit API with no shadowing.
-//    compileOnly 'org.spigotmc:spigot:1.16.2-R0.1-SNAPSHOT' // The full Spigot server with no shadowing. Requires mavenLocal.
-//    compileOnly 'org.bukkit:craftbukkit:1.16.2-R0.1-SNAPSHOT' // The full CraftBukkit server with no shadowing. Requires mavenLocal.
-    compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
-    annotationProcessor 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
+//    compileOnly 'org.bukkit:bukkit:1.16.3-R0.1-SNAPSHOT' // The Bukkit API with no shadowing.
+//    compileOnly 'org.spigotmc:spigot:1.16.3-R0.1-SNAPSHOT' // The full Spigot server with no shadowing. Requires mavenLocal.
+//    compileOnly 'org.bukkit:craftbukkit:1.16.3-R0.1-SNAPSHOT' // The full CraftBukkit server with no shadowing. Requires mavenLocal.
 }
 
 sourceSets {

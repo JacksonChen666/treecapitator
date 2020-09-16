@@ -5,14 +5,10 @@ import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.processings.Listener;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.annotation.plugin.Description;
-import org.bukkit.plugin.java.annotation.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
 
-@Plugin(name = "TreecapitatorCommand", version = "1.0.0")
-@Description(value = "Capitates trees just like Hypixel")
 public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
