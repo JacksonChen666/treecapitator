@@ -1,5 +1,6 @@
 package io.github.jacksonchen666.treecapitator.processings;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,6 +26,7 @@ public class BreakingBlocks extends BukkitRunnable {
     private final List<Block> lastBreak = new ArrayList<>();
     private final List<Block> thisBreak = new ArrayList<>();
     private final List<Block> nextBreak = new ArrayList<>();
+    private final List<Long> times = new ArrayList<>();
     private int currentBlocks = 0;
 
     public BreakingBlocks(Block brokenBlock, Player player) {
@@ -50,32 +52,25 @@ public class BreakingBlocks extends BukkitRunnable {
         return acceptableBlock(block.getType());
     }
 
-    public void breakBlocks() {
-        while (lastBreak.size() != 0) {
-            if (nextBreak.size() != 0) {
+    @Override
+    public void run() {
+        // TODO test without scheduling then fix and then with scheduling
+        long start = System.nanoTime();
+        if (lastBreak.size() == 0) {
+            long end = System.nanoTime();
+            times.add(end - start);
+            this.cancel();
+            return;
+        }
+        currentBlocks = 0;
+        if (nextBreak.size() != 0) {
+            try {
                 for (Block block : nextBreak) {
                     processBlock(block);
                 }
             }
-            for (Block block : lastBreak) {
-                processBlock(block);
-            }
-            lastBreak.clear();
-            lastBreak.addAll(thisBreak);
-            thisBreak.clear();
-        }
-    }
+            catch (ConcurrentModificationException ignored) {
 
-    @Override
-    public void run() {
-        // TODO test without scheduling then fix and then with scheduling
-        if (lastBreak.size() == 0) {
-            this.cancel();
-            return;
-        }
-        if (nextBreak.size() != 0) {
-            for (Block block : nextBreak) {
-                processBlock(block);
             }
         }
         for (Block block : lastBreak) {
@@ -84,6 +79,24 @@ public class BreakingBlocks extends BukkitRunnable {
         lastBreak.clear();
         lastBreak.addAll(thisBreak);
         thisBreak.clear();
+        long end = System.nanoTime();
+        times.add(end - start);
+    }
+
+    public void breakBlocks() { // All in one tick
+        amounts.put(player, 0);
+        Bukkit.getLogger().info("Started chopping down logs");
+        long start = System.nanoTime();
+        while (lastBreak.size() != 0) {
+            for (Block block : lastBreak) {
+                processBlock2(block);
+            }
+            lastBreak.clear();
+            lastBreak.addAll(thisBreak);
+            thisBreak.clear();
+        }
+        long end = System.nanoTime();
+        Bukkit.getLogger().info("Finished in " + (end - start) / 1E+6 + "ms");
     }
 
     private void processBlock(Block block) {
@@ -93,8 +106,7 @@ public class BreakingBlocks extends BukkitRunnable {
                 if (acceptableBlock(block) && block.breakNaturally()) {
                     thisBreak.addAll(getBlocks(block, 1));
                     currentBlocks++;
-                    amount++;
-                    amounts.put(player, amount);
+                    amounts.put(player, amount + 1);
                 }
             }
             else {
@@ -109,16 +121,9 @@ public class BreakingBlocks extends BukkitRunnable {
     private void processBlock2(Block block) {
         int amount = amounts.getOrDefault(player, 0);
         if (maxLogs > amount) {
-            if (blocksPerTick > currentBlocks) {
-                if (acceptableBlock(block) && block.breakNaturally()) {
-                    thisBreak.addAll(getBlocks(block, 1));
-                    currentBlocks++;
-                    amount++;
-                    amounts.put(player, amount);
-                }
-            }
-            else {
-                nextBreak.add(block);
+            if (acceptableBlock(block) && block.breakNaturally()) {
+                thisBreak.addAll(getBlocks(block, 1));
+                amounts.put(player, amount + 1);
             }
         }
     }
@@ -126,6 +131,8 @@ public class BreakingBlocks extends BukkitRunnable {
     @Override
     public synchronized void cancel() throws IllegalStateException {
         cooldownTo.put(player, LocalTime.now().plusSeconds(cooldown));
+        long time = times.stream().mapToLong(time1 -> time1).sum();
+        Bukkit.getLogger().info("Finished chopping down " + amounts.get(player) + " logs in " + time / 1E+6 + "ms (average " + time / times.size() / 1E+6 + "ms)");
         amounts.remove(player);
         super.cancel();
     }

@@ -4,6 +4,9 @@ import io.github.jacksonchen666.treecapitator.Main;
 import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +22,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.blocksPerTick;
+import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.getBlocks;
 
 @org.bukkit.plugin.java.annotation.command.Command(name = TreecapitatorCommand.COMMAND_NAME, desc = "Get a Treecapitator, give others players, and settings.")
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
@@ -90,6 +96,20 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                     BreakingBlocks.cooldown = number;
                     plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
                     commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
+                }
+                else if (args[0].equalsIgnoreCase("test")) {
+                    assert commandSender instanceof Player;
+                    Player player = (Player) commandSender;
+                    World world = player.getWorld();
+                    Block start = world.getBlockAt(0, 150, 0);
+                    Material originalMaterial = start.getType();
+                    int radius = Integer.parseInt(args[1]);
+                    for (Block block : getBlocks(start, radius)) {
+                        block.setType(Material.OAK_LOG);
+                    }
+                    new BreakingBlocks(start, player).breakBlocks();
+                    TestCheck temp = new TestCheck(player, start, originalMaterial);
+                    temp.runTaskLater(plugin, (long) Math.ceil(Math.pow(3, radius) / blocksPerTick));
                 }
                 else {
                     commandSender.sendMessage("Unknown setting.");

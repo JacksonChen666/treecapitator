@@ -35,7 +35,7 @@ public class Listener implements org.bukkit.event.Listener {
                     CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) &&
                     Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
                 BreakingBlocks task = new BreakingBlocks(block, player);
-                //                task.runTaskTimer(plugin, 1L, 1L);
+                //                task.runTaskTimer(plugin, 0L, 1L);
                 task.breakBlocks();
                 break;
             }
