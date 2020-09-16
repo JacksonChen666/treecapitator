@@ -7,4 +7,20 @@ description: Capitates trees just like Hypixel
 
 commands:
   treecapitator:
-    description: Get a Treecapitator!
+    description: Get a Treecapitator, settings, and give other players also.
+    aliases: [ "treecap" ]
+
+permissions:
+  treecapitator.*:
+    default: op
+    description: All permissions
+    children:
+      treecapitator.settings: true
+      treecapitator.getItem: true
+      treecapitator.giveItem: true
+  treecapitator.getItem:
+    description: Get the treecapitator
+  treecapitator.giveItem:
+    description: Give a treecapitator to other players in the game
+  treecapitator.settings:
+    description: Able to change the settings of the plugin

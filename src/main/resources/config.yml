@@ -2,6 +2,7 @@
 prefix: '&a[&rTreeCap&a]&r'
 messages:
   missing_argument: '{prefix} &cYou are missing arguments: {argument}'
+  missing_permission: '{prefix} &cYou are missing permission: {permission}'
   player_not_found: '{prefix} &c{player} is not online!'
   number_required: '{prefix} &cMust be a number'
   save_failed: '{prefix} &4Saving config failed. Config changes may be lost. Please check the console!'
