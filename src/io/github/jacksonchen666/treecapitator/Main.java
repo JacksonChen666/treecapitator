@@ -20,7 +20,7 @@ public class Main extends JavaPlugin {
         BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
         BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
         new TreecapitatorCommand(this);
-        getServer().getPluginManager().registerEvents(new Listener(this), this);
+        getServer().getPluginManager().registerEvents(new Listener(), this);
     }
 
     @Override

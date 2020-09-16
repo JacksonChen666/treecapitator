@@ -21,7 +21,7 @@ public class BreakingBlocks extends BukkitRunnable {
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
-    public static int blocksPerTick = 128;
+    public static final int blocksPerTick = 128;
     private final Player player;
     private final List<Block> lastBreak = new ArrayList<>();
     private final List<Block> thisBreak = new ArrayList<>();

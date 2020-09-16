@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -18,12 +17,6 @@ import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.
 import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
 
 public class Listener implements org.bukkit.event.Listener {
-    private final JavaPlugin plugin;
-
-    public Listener(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
