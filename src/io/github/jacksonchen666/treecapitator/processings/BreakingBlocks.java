@@ -44,16 +44,14 @@ public class BreakingBlocks {
     public static void breakBlocks(Block brokenBlock, Player player) { // 19000 blocks in 1.2 seconds
         lastBreak.add(brokenBlock);
         amounts.put(player, 0);
+        int amount = amounts.getOrDefault(player, 0);
         Bukkit.getLogger().info("Started chopping down logs");
         long start = System.nanoTime();
         while (lastBreak.size() != 0) {
             for (Block block : lastBreak) {
-                int amount = amounts.getOrDefault(player, 0);
-                if (maxLogs > amount) {
-                    if (acceptableBlock(block) && block.breakNaturally()) {
-                        thisBreak.addAll(getBlocks(block, 1));
-                        amounts.put(player, amount + 1);
-                    }
+                if (maxLogs > amount && acceptableBlock(block) && block.breakNaturally()) {
+                    thisBreak.addAll(getBlocks(block, 1));
+                    amount++;
                 }
             }
             lastBreak.clear();
@@ -62,5 +60,6 @@ public class BreakingBlocks {
         }
         long end = System.nanoTime();
         Bukkit.getLogger().info("Finished in " + (end - start) / 1E+6 + "ms");
+        amounts.put(player, amount);
     }
 }
