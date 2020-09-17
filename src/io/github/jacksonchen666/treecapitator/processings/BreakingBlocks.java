@@ -48,7 +48,13 @@ public class BreakingBlocks {
         long start = System.nanoTime();
         while (lastBreak.size() != 0) {
             for (Block block : lastBreak) {
-                processBlock(block, player);
+                int amount = amounts.getOrDefault(player, 0);
+                if (maxLogs > amount) {
+                    if (acceptableBlock(block) && block.breakNaturally()) {
+                        thisBreak.addAll(getBlocks(block, 1));
+                        amounts.put(player, amount + 1);
+                    }
+                }
             }
             lastBreak.clear();
             lastBreak.addAll(thisBreak);
@@ -56,15 +62,5 @@ public class BreakingBlocks {
         }
         long end = System.nanoTime();
         Bukkit.getLogger().info("Finished in " + (end - start) / 1E+6 + "ms");
-    }
-
-    private static void processBlock(Block block, Player player) {
-        int amount = amounts.getOrDefault(player, 0);
-        if (maxLogs > amount) {
-            if (acceptableBlock(block) && block.breakNaturally()) {
-                thisBreak.addAll(getBlocks(block, 1));
-                amounts.put(player, amount + 1);
-            }
-        }
     }
 }
