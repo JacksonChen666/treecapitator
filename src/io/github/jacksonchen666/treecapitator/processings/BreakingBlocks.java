@@ -41,7 +41,7 @@ public class BreakingBlocks {
         return acceptableBlock(block.getType());
     }
 
-    public static void breakBlocks(Block brokenBlock, Player player) {
+    public static void breakBlocks(Block brokenBlock, Player player) { // 19000 blocks in 1.2 seconds
         lastBreak.add(brokenBlock);
         amounts.put(player, 0);
         Bukkit.getLogger().info("Started chopping down logs");
