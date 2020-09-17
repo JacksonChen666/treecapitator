@@ -5,6 +5,8 @@ plugins {
 group 'io.github.jacksonchen666.treecapitator'
 version '1.0.1'
 
+// TODO remove version from jar file name automatically
+
 repositories {
     mavenCentral() // This is needed for dependencies.
     /*
