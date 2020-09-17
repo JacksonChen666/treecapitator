@@ -16,7 +16,6 @@ public class BreakingBlocks {
             Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
             Material.STRIPPED_SPRUCE_LOG
     };
-    public static final int blocksPerTick = 128;
     protected static final Map<Player, Integer> amounts = new HashMap<>();
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
     private static final List<Block> lastBreak = new ArrayList<>();

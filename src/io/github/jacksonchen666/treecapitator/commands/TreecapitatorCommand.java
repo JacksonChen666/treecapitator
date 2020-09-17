@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.blocksPerTick;
 import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.getBlocks;
 
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
@@ -121,7 +120,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         }
                         BreakingBlocks.breakBlocks(start, player);
                         TestCheck temp = new TestCheck(player, start, originalMaterial);
-                        temp.runTaskLater(plugin, (long) Math.ceil(Math.pow(3, radius) / blocksPerTick));
+                        temp.runTaskLater(plugin, 1L);
                     }
                     else {
                         commandSender.sendMessage("Unknown setting.");
