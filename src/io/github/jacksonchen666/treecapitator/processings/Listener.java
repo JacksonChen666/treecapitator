@@ -27,9 +27,7 @@ public class Listener implements org.bukkit.event.Listener {
                     hand.getType() == Material.GOLDEN_AXE &&
                     CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) &&
                     Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
-                BreakingBlocks task = new BreakingBlocks(block, player);
-                //                task.runTaskTimer(plugin, 0L, 1L);
-                task.breakBlocks();
+                BreakingBlocks.breakBlocks(block, player);
                 break;
             }
         }
