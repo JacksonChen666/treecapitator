@@ -41,7 +41,7 @@ public class BreakingBlocks {
         return acceptableBlock(block.getType());
     }
 
-    public static void breakBlocks(Block brokenBlock, Player player) { // 19000 blocks in 1.2 seconds
+    public static void breakBlocks(Block brokenBlock, Player player) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
         lastBreak.add(brokenBlock);
         amounts.put(player, 0);
         int amount = amounts.getOrDefault(player, 0);

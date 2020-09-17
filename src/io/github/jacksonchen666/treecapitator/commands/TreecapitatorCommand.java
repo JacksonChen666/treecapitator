@@ -115,11 +115,16 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         Block start = world.getBlockAt(0, 150, 0);
                         Material originalMaterial = start.getType();
                         int radius = Integer.parseInt(args[1]);
-                        for (Block block : getBlocks(start, radius)) {
+                        int previous = BreakingBlocks.maxLogs;
+                        List<Block> blocks = getBlocks(start, radius);
+                        BreakingBlocks.maxLogs = blocks.size();
+                        player.sendMessage(blocks.size() + " blocks to process");
+                        for (Block block : blocks) {
                             block.setType(Material.OAK_LOG);
                         }
                         BreakingBlocks.breakBlocks(start, player);
-                        TestCheck temp = new TestCheck(player, start, originalMaterial);
+                        BreakingBlocks.maxLogs = previous;
+                        TestCheck temp = new TestCheck(player, start, originalMaterial, radius);
                         temp.runTaskLater(plugin, 1L);
                     }
                     else {
