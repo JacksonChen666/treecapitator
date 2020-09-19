@@ -123,7 +123,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             for (Block block : blocks) {
                                 block.setType(Material.OAK_LOG);
                             }
-                            BreakingBlocks.breakBlocks(start, player);
+                            BreakingBlocks.breakBlocks(start);
                             BreakingBlocks.maxLogs = previous;
                             TestCheck temp = new TestCheck(player, start, originalMaterial, radius);
                             temp.runTaskLater(plugin, 1L);

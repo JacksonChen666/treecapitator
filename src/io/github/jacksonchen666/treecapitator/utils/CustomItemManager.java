@@ -25,24 +25,6 @@ public class CustomItemManager {
         player.updateInventory();
     }
 
-    // --Commented out by Inspection START (2020. 09. 15. 21:04:01:474):
-    //    public static boolean isCustomItem(ItemStack item) {
-    //        return item.hasItemMeta() && (Objects.requireNonNull(item.getItemMeta()).hasDisplayName() || item.getItemMeta().hasLore());
-    //    }
-    // --Commented out by Inspection STOP (2020. 09. 15. 21:04:01:474)
-
-    // --Commented out by Inspection START (2020. 09. 15. 21:04:04:565):
-    //    public static boolean isCustomItem(ItemStack item, String displayName) {
-    //        return item.hasItemMeta() && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase(displayName);
-    //    }
-    // --Commented out by Inspection STOP (2020. 09. 15. 21:04:04:565)
-
-    // --Commented out by Inspection START (2020. 09. 15. 21:04:04:550):
-    //    public static boolean isCustomItem(ItemStack item, List<String> lore) {
-    //        return item.hasItemMeta() && Objects.requireNonNull(item.getItemMeta()).hasLore() && Objects.equals(item.getItemMeta().getLore(), lore);
-    //    }
-    // --Commented out by Inspection STOP (2020. 09. 15. 21:04:04:550)
-
     public static boolean isCustomItem(ItemStack item, String displayName, List<String> lore) {
         return item.hasItemMeta() && Objects.requireNonNull(item.getItemMeta()).hasDisplayName() && item.getItemMeta().hasLore() && item.getItemMeta().getDisplayName().equalsIgnoreCase(displayName) && Objects.equals(item.getItemMeta().getLore(), lore);
     }

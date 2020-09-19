@@ -16,12 +16,11 @@ public class BreakingBlocks {
             Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
             Material.STRIPPED_SPRUCE_LOG
     };
-    protected static final Map<Player, Integer> amounts = new HashMap<>();
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
-    private static final List<Block> lastBreak = new ArrayList<>();
     private static final List<Block> thisBreak = new ArrayList<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
+    private static List<Block> lastBreak = new ArrayList<>();
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
     public static ArrayList<Block> getBlocks(Block start, int radius) {
@@ -41,10 +40,9 @@ public class BreakingBlocks {
         return acceptableBlock(block.getType());
     }
 
-    public static void breakBlocks(Block brokenBlock, Player player) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
+    public static void breakBlocks(Block brokenBlock) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
         lastBreak.add(brokenBlock);
-        amounts.put(player, 0);
-        int amount = amounts.getOrDefault(player, 0);
+        int amount = 0;
         Bukkit.getLogger().info("Started chopping down logs");
         long start = System.nanoTime();
         while (lastBreak.size() != 0) {
@@ -54,12 +52,10 @@ public class BreakingBlocks {
                     amount++;
                 }
             }
-            lastBreak.clear();
-            lastBreak.addAll(thisBreak);
+            lastBreak = thisBreak;
             thisBreak.clear();
         }
         long end = System.nanoTime();
         Bukkit.getLogger().info("Finished in " + (end - start) / 1E+6 + "ms");
-        amounts.put(player, amount);
     }
 }
