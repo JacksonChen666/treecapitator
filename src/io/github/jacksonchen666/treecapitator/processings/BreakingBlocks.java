@@ -20,7 +20,7 @@ public class BreakingBlocks {
     private static final List<Block> thisBreak = new ArrayList<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
-    private static List<Block> lastBreak = new ArrayList<>();
+    private static final List<Block> lastBreak = new ArrayList<>();
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
     public static ArrayList<Block> getBlocks(Block start, int radius) {
@@ -52,7 +52,8 @@ public class BreakingBlocks {
                     amount++;
                 }
             }
-            lastBreak = thisBreak;
+            lastBreak.clear();
+            lastBreak.addAll(thisBreak);
             thisBreak.clear();
         }
         long end = System.nanoTime();

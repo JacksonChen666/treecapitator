@@ -49,7 +49,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
         return Objects.requireNonNull(plugin.getConfig().getString(path)).replace("{prefix}", prefix);
     }
 
-    public static boolean hasPermission(CommandSender commandSender, String permission) {
+    private static boolean hasPermission(CommandSender commandSender, String permission) {
         if (commandSender.hasPermission(permission)) {
             return true;
         }
@@ -61,7 +61,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (s.equalsIgnoreCase(COMMAND_NAME)) {
+        if (command.getName().equalsIgnoreCase(COMMAND_NAME)) {
             String prefix = getText("prefix");
             if (!(commandSender instanceof Player) && args.length == 0) {
                 plugin.getServer().getConsoleSender().sendMessage(ChatColors.color(getText("messages.missing_argument", prefix).replace("{argument}", "player/setting")));

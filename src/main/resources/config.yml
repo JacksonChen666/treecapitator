@@ -1,5 +1,5 @@
 # Use & as color coding
-prefix: '&a[&rTreeCap&a]&r'
+prefix: '&a[&rTreecapitator&a]&r'
 messages:
   missing_argument: '{prefix} &cYou are missing arguments: {argument}'
   missing_permission: '{prefix} &cYou are missing permission: {permission}'
