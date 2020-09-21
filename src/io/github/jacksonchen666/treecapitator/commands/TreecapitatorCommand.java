@@ -149,19 +149,19 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length - 1 == 1) {
-            if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
-                return IntStream.range(5, 11).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
-            }
-            else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
-                return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
-            }
-            else {
+        switch (args.length - 1) {
+            case 1:
+                if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
+                    return IntStream.range(5, 11).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
+                }
+                else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
+                    return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
+                }
+                else {
+                    return Collections.emptyList();
+                }
+            case 2:
                 return Collections.emptyList();
-            }
-        }
-        else if (args.length - 1 == 2) {
-            return Collections.emptyList();
         }
         List<String> tabComplete = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
         tabComplete.addAll(arg2No0);
