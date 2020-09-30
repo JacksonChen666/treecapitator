@@ -23,8 +23,8 @@ public class BreakingBlocks {
     private static final List<Block> lastBreak = new ArrayList<>();
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
-    public static ArrayList<Block> getBlocks(Block start, int radius) {
-        ArrayList<Block> blocks = new ArrayList<>();
+    public static List<Block> getBlocks(Block start, int radius) {
+        List<Block> blocks = new ArrayList<>();
         for (double x = start.getX() - radius; x <= start.getX() + radius; x++)
             for (double y = start.getY() - radius; y <= start.getY() + radius; y++)
                 for (double z = start.getZ() - radius; z <= start.getZ() + radius; z++)

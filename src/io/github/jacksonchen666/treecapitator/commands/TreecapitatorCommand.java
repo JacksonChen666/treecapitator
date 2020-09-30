@@ -41,11 +41,11 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
         Objects.requireNonNull(plugin.getCommand(COMMAND_NAME)).setExecutor(this);
     }
 
-    public static String getText(String path) {
+    private static String getText(String path) {
         return plugin.getConfig().getString(path);
     }
 
-    public static String getText(String path, String prefix) {
+    private static String getText(String path, String prefix) {
         return Objects.requireNonNull(plugin.getConfig().getString(path)).replace("{prefix}", prefix);
     }
 
