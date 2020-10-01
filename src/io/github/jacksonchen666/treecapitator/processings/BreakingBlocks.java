@@ -17,10 +17,8 @@ public class BreakingBlocks {
             Material.STRIPPED_SPRUCE_LOG
     };
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
-    private static final List<Block> thisBreak = new ArrayList<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
-    private static final List<Block> lastBreak = new ArrayList<>();
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
     public static List<Block> getBlocks(Block start, int radius) {
@@ -41,7 +39,8 @@ public class BreakingBlocks {
     }
 
     public static void breakBlocks(Block brokenBlock) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
-        lastBreak.add(brokenBlock);
+        final List<Block> thisBreak = new ArrayList<>();
+        final List<Block> lastBreak = new ArrayList<>(Collections.singletonList(brokenBlock));
         int amount = 0;
         Bukkit.getLogger().info("Started chopping down logs");
         long start = System.nanoTime();
