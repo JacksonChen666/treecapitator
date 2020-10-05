@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Treecapitator extends JavaPlugin {
+    private NamespacedKey key;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -26,7 +28,7 @@ public class Treecapitator extends JavaPlugin {
 
         // recipe
         ItemStack axe = TreecapitatorItem.createItem();
-        NamespacedKey key = new NamespacedKey(this, "treecapitator");
+        key = new NamespacedKey(this, "treecapitator");
         ShapedRecipe recipe = new ShapedRecipe(key, axe);
         recipe.shape(
                 "GGG",
@@ -36,6 +38,11 @@ public class Treecapitator extends JavaPlugin {
         recipe.setIngredient('G', Material.GOLD_BLOCK);
         recipe.setIngredient('X', Material.GOLDEN_AXE);
         Bukkit.addRecipe(recipe);
+    }
+
+    @Override
+    public void onDisable() {
+        Bukkit.removeRecipe(key);
     }
 
     @Override
