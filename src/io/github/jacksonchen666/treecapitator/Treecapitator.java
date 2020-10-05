@@ -1,9 +1,15 @@
 package io.github.jacksonchen666.treecapitator;
 
 import io.github.jacksonchen666.treecapitator.commands.TreecapitatorCommand;
+import io.github.jacksonchen666.treecapitator.commands.TreecapitatorItem;
 import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.processings.Listener;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,6 +23,19 @@ public class Treecapitator extends JavaPlugin {
         BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
         new TreecapitatorCommand(this);
         getServer().getPluginManager().registerEvents(new Listener(), this);
+
+        // recipe
+        ItemStack axe = TreecapitatorItem.createItem();
+        NamespacedKey key = new NamespacedKey(this, "treecapitator");
+        ShapedRecipe recipe = new ShapedRecipe(key, axe);
+        recipe.shape(
+                "OOO",
+                "OXO",
+                "OOO"
+        );
+        recipe.setIngredient('O', Material.GOLD_BLOCK);
+        recipe.setIngredient('X', Material.GOLDEN_AXE);
+        Bukkit.addRecipe(recipe);
     }
 
     @Override
