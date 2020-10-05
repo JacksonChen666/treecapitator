@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 
-public class Main extends JavaPlugin {
+public class Treecapitator extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();

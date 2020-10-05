@@ -1,6 +1,6 @@
 package io.github.jacksonchen666.treecapitator.commands;
 
-import io.github.jacksonchen666.treecapitator.Main;
+import io.github.jacksonchen666.treecapitator.Treecapitator;
 import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
@@ -33,9 +33,9 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
     private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
-    private static Main plugin;
+    private static Treecapitator plugin;
 
-    public TreecapitatorCommand(Main plugin) {
+    public TreecapitatorCommand(Treecapitator plugin) {
         TreecapitatorCommand.plugin = plugin;
 
         Objects.requireNonNull(plugin.getCommand(COMMAND_NAME)).setExecutor(this);
