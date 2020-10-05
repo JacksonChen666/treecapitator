@@ -29,11 +29,11 @@ public class Treecapitator extends JavaPlugin {
         NamespacedKey key = new NamespacedKey(this, "treecapitator");
         ShapedRecipe recipe = new ShapedRecipe(key, axe);
         recipe.shape(
-                "OOO",
-                "OXO",
-                "OOO"
+                "GGG",
+                "GXG",
+                "GGG"
         );
-        recipe.setIngredient('O', Material.GOLD_BLOCK);
+        recipe.setIngredient('G', Material.GOLD_BLOCK);
         recipe.setIngredient('X', Material.GOLDEN_AXE);
         Bukkit.addRecipe(recipe);
     }
