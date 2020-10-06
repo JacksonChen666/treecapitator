@@ -15,7 +15,7 @@ public class TreecapitatorItem {
             ChatColor.GRAY.toString() + "A forceful Gold Axe which can",
             ChatColor.GRAY.toString() + "break a large amount of logs in",
             ChatColor.GRAY.toString() + "a single hit!",
-            ChatColor.DARK_GRAY.toString() + "Cooldown: " + ChatColor.GREEN.toString() + "2s",
+            ChatColor.DARK_GRAY.toString() + "Default cooldown: " + ChatColor.GREEN.toString() + "2s",
             "",
             ChatColor.DARK_PURPLE.toString() + "§lEPIC AXE"
     );
