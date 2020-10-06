@@ -1,6 +1,5 @@
 package io.github.jacksonchen666.treecapitator.utils;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,11 +17,6 @@ public class CustomItemManager {
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
         return item;
-    }
-
-    public static void customItem(Player player, ItemStack item, String displayName, List<String> lore) {
-        player.getInventory().addItem(customItem(item, displayName, lore));
-        player.updateInventory();
     }
 
     public static boolean isCustomItem(ItemStack item, String displayName, List<String> lore) {
