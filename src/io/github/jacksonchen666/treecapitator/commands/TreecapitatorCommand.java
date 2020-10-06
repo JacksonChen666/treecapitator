@@ -109,21 +109,19 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                         }
                         else if (args[0].equalsIgnoreCase("test")) {
-                            assert commandSender instanceof Player;
-                            Player player = (Player) commandSender;
-                            Block start = player.getWorld().getBlockAt(0, 150, 0);
-                            Material originalMaterial = start.getType();
+                            Block start = Bukkit.getWorlds().get(0).getBlockAt(0, 150, 0);
+                            Material toBreak = Material.OAK_LOG;
                             int radius = Integer.parseInt(args[1]);
                             int previous = BreakingBlocks.maxLogs;
                             List<Block> blocks = getBlocks(start, radius);
                             BreakingBlocks.maxLogs = blocks.size();
-                            player.sendMessage(blocks.size() + " blocks to process");
+                            commandSender.sendMessage(blocks.size() + " blocks to process");
                             for (Block block : blocks) {
-                                block.setType(Material.OAK_LOG);
+                                block.setType(toBreak);
                             }
                             BreakingBlocks.breakBlocks(start);
                             BreakingBlocks.maxLogs = previous;
-                            TestCheck temp = new TestCheck(player, start, originalMaterial, radius);
+                            TestCheck temp = new TestCheck(commandSender, start, toBreak, radius);
                             temp.runTaskLater(plugin, 1L);
                         }
                         else {
