@@ -22,7 +22,8 @@ public class TreecapitatorItem {
 
     public static void giveItem(Player player) {
         player.getInventory().addItem(createItem());
-        player.updateInventory();
+        // TODO check if the inventory updates after adding item
+        //        player.updateInventory();
     }
 
     public static ItemStack createItem() {
