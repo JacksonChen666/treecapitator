@@ -17,15 +17,17 @@ import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.
 import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
 
 public class Listener implements org.bukkit.event.Listener {
+    private static final Material[] acceptedMaterials = new Material[] {Material.GOLDEN_AXE};
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         List<ItemStack> handsItem = Arrays.asList(player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand());
         Block block = event.getBlock();
         for (ItemStack hand : handsItem) {
-            if (LocalTime.now().isAfter(cooldownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
-                    hand.getType() == Material.GOLDEN_AXE &&
+            if (Arrays.stream(acceptedMaterials).anyMatch(material -> hand.getType() == material) &&
                     CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) &&
+                    LocalTime.now().isAfter(cooldownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) &&
                     Arrays.stream(acceptableBlock).anyMatch(l -> l == block.getType())) {
                 BreakingBlocks.breakBlocks(block);
                 break;
