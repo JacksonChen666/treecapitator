@@ -5,7 +5,6 @@ import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,23 +32,23 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
     private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
-    private static Treecapitator plugin;
+    private final Treecapitator plugin;
 
     public TreecapitatorCommand(Treecapitator plugin) {
-        TreecapitatorCommand.plugin = plugin;
+        this.plugin = plugin;
 
         Objects.requireNonNull(plugin.getCommand(COMMAND_NAME)).setExecutor(this);
     }
 
-    private static String getText(String path) {
+    private String getText(String path) {
         return plugin.getConfig().getString(path);
     }
 
-    private static String getText(String path, String prefix) {
+    private String getText(String path, String prefix) {
         return Objects.requireNonNull(plugin.getConfig().getString(path)).replace("{prefix}", prefix);
     }
 
-    private static boolean hasPermission(CommandSender commandSender, String permission) {
+    private boolean hasPermission(CommandSender commandSender, String permission) {
         if (commandSender.hasPermission(permission)) {
             return true;
         }
@@ -112,8 +111,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         else if (args[0].equalsIgnoreCase("test")) {
                             assert commandSender instanceof Player;
                             Player player = (Player) commandSender;
-                            World world = player.getWorld();
-                            Block start = world.getBlockAt(0, 150, 0);
+                            Block start = player.getWorld().getBlockAt(0, 150, 0);
                             Material originalMaterial = start.getType();
                             int radius = Integer.parseInt(args[1]);
                             int previous = BreakingBlocks.maxLogs;
