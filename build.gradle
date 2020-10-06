@@ -18,20 +18,22 @@ repositories {
     */
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-//    mavenLocal() // This is needed for CraftBukkit and Spigot.
+    maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
-//    compileOnly 'org.bukkit:bukkit:1.16.3-R0.1-SNAPSHOT' // The Bukkit API with no shadowing.
-//    compileOnly 'org.spigotmc:spigot:1.16.3-R0.1-SNAPSHOT' // The full Spigot server with no shadowing. Requires mavenLocal.
-//    compileOnly 'org.bukkit:craftbukkit:1.16.3-R0.1-SNAPSHOT' // The full CraftBukkit server with no shadowing. Requires mavenLocal.
+    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
+    // The Spigot API with no shadowing. Requires the OSS repo.
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.5.0'
+    testImplementation 'junit:junit:4.12'
 }
 
 sourceSets {
-    main {
-        java {
-            srcDirs = ['src']
-        }
+    main.java {
+        srcDirs = ['src/main']
+    }
+    test.java {
+        srcDirs = ['src/test']
     }
 }
+

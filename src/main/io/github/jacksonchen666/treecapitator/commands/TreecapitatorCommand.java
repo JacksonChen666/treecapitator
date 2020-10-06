@@ -49,7 +49,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean hasPermission(CommandSender commandSender, String permission) {
-        if (commandSender.hasPermission(permission)) {
+        if (!(commandSender instanceof Player) || commandSender.hasPermission(permission)) {
             return true;
         }
         else {

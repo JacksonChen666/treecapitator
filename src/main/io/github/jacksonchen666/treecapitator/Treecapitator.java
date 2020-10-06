@@ -10,7 +10,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,5 +63,13 @@ public class Treecapitator extends JavaPlugin {
         catch (IOException | org.bukkit.configuration.InvalidConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public Treecapitator() { // unit testing
+        super();
+    }
+
+    protected Treecapitator(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) { // unit testing
+        super(loader, description, dataFolder, file);
     }
 }
