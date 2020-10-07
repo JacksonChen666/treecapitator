@@ -25,7 +25,20 @@ public class BreakingBlocksTest {
     }
 
     @Test
-    public void testAcceptableMaterial() {
+    public void testAcceptableBlock() {
+        Block block = Objects.requireNonNull(server.getWorld("world")).getBlockAt(0, 0, 0);
+        block.setType(BreakingBlocks.acceptableBlock[0]);
+        Assert.assertTrue(BreakingBlocks.acceptableBlock(block));
+    }
+
+    @Test
+    public void getBlocks() {
+        List<Block> blocks = BreakingBlocks.getBlocks(Objects.requireNonNull(server.getWorld("world")).getBlockAt(0, 50, 0), 10);
+        Assert.assertEquals(9261, blocks.size());
+    }
+
+    @Test
+    public void acceptableBlock() {
         List<Boolean> acceptables = Arrays.stream(BreakingBlocks.acceptableBlock).map(BreakingBlocks::acceptableBlock).collect(Collectors.toList());
         for (boolean bool : acceptables) {
             if (!bool) {
@@ -33,13 +46,6 @@ public class BreakingBlocksTest {
                 break;
             }
         }
-    }
-
-    @Test
-    public void testAcceptableBlock() {
-        Block block = Objects.requireNonNull(server.getWorld("world")).getBlockAt(0, 0, 0);
-        block.setType(BreakingBlocks.acceptableBlock[0]);
-        Assert.assertTrue(BreakingBlocks.acceptableBlock(block));
     }
 
     @After
