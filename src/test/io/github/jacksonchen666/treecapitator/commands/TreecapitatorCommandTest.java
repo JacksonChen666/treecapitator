@@ -121,6 +121,13 @@ public class TreecapitatorCommandTest {
         result.assertFailed();
     }
 
+    @Test
+    public void testConsoleError() {
+        CommandResult result = server.executeConsole("treecapitator");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing arguments: player/setting"));
+        result.assertFailed();
+    }
+
     @After
     public void tearDown() {
         MockBukkit.unmock();
