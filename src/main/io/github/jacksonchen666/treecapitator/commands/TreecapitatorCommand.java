@@ -133,8 +133,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             }
                             BreakingBlocks.breakBlocks(start);
                             BreakingBlocks.maxLogs = previous;
-                            TestCheck temp = new TestCheck(commandSender, start, toBreak, radius);
-                            temp.runTaskLater(plugin, 1L);
+                            new TestCheck(commandSender, start, toBreak, radius).run();
                         }
                         else {
                             commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
