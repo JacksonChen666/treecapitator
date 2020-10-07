@@ -78,7 +78,14 @@ public class TreecapitatorCommandTest {
     }
 
     @Test
-    @Ignore(value = "Bad Y level and getMaxHeight is not implemented")
+    public void testSettingsNonOp() {
+        CommandResult result = server.execute("treecapitator", player2, "maxLogs", "123456789");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing permission: treecapitator.settings"));
+        result.assertFailed();
+    }
+
+    @Test
+    @Ignore(value = "Bad Y level, getMaxHeight and breakNaturally is not implemented")
     public void testTreecapitator() {
         int radius = 5;
         server.execute("treecapitator", player1, "test", String.valueOf(radius));
