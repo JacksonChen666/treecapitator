@@ -61,100 +61,97 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (command.getName().equalsIgnoreCase(COMMAND_NAME)) {
-            String prefix = getText("prefix");
-            if (!(commandSender instanceof Player) && args.length == 0) {
-                plugin.getServer().getConsoleSender().sendMessage(ChatColors.color(getText("messages.missing_argument", prefix).replace("{argument}", "player/setting")));
-                return false;
-            }
-
-            switch (args.length) {
-                case 0:
-                    if (hasPermission(commandSender, "treecapitator.getItem")) {
-                        TreecapitatorItem.giveItem((Player) commandSender);
-                        commandSender.sendMessage(ChatColors.color(getText("messages.get_axe", prefix)));
-                    }
-                    else {
-                        return false;
-                    }
-                    break;
-                case 1:
-                    if (hasPermission(commandSender, "treecapitator.giveItem")) {
-                        try {
-                            Player player = Objects.requireNonNull(Bukkit.getPlayer(args[0]));
-                            TreecapitatorItem.giveItem(player);
-                            commandSender.sendMessage(ChatColors.color(getText("messages.give_axe", prefix).replace("{player}", args[0])));
-                            player.sendMessage(ChatColors.color(getText("messages.other_get", prefix).replace("{player}", commandSender.getName())));
-                        }
-                        catch (NullPointerException e1) {
-                            commandSender.sendMessage(ChatColors.color(getText("messages.player_not_found", prefix).replace("{player}", args[0])));
-                            return false;
-                        }
-                    }
-                    else {
-                        return false;
-                    }
-                    break;
-                default:
-                    if (hasPermission(commandSender, "treecapitator.settings")) {
-                        int number;
-                        try {
-                            number = Integer.parseInt(args[1]);
-                        }
-                        catch (NumberFormatException e) {
-                            commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
-                            return false;
-                        }
-                        if (args[0].equalsIgnoreCase("maxLogs")) {
-                            BreakingBlocks.maxLogs = number;
-                            if (BreakingBlocks.maxLogs > dangerThreshold) {
-                                commandSender.sendMessage(warningMessage);
-                            }
-                            plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maxLogs);
-                            commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maxLogs))));
-                        }
-                        else if (args[0].equalsIgnoreCase("cooldown")) {
-                            BreakingBlocks.cooldown = number;
-                            plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
-                            commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
-                        }
-                        else if (args[0].equalsIgnoreCase("test")) {
-                            assert commandSender instanceof Player;
-                            Material toBreak = Material.OAK_LOG;
-                            int radius = Integer.parseInt(args[1]);
-                            World world = ((Player) commandSender).getWorld();
-                            Block start = world.getBlockAt(0, world.getMaxHeight() - radius, 0);
-                            int previous = BreakingBlocks.maxLogs;
-                            List<Block> blocks = getBlocks(start, radius);
-                            BreakingBlocks.maxLogs = blocks.size();
-                            commandSender.sendMessage(blocks.size() + " blocks to process");
-                            for (Block block : blocks) {
-                                block.setType(toBreak);
-                            }
-                            BreakingBlocks.breakBlocks(start);
-                            BreakingBlocks.maxLogs = previous;
-                            new TestCheck(commandSender, start, toBreak, radius).run();
-                        }
-                        else {
-                            commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
-                            return false;
-                        }
-                        try {
-                            plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
-                        }
-                        catch (IOException e) {
-                            commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
-                            e.printStackTrace();
-                        }
-                    }
-                    else {
-                        return false;
-                    }
-                    break;
-            }
-            return true;
+        String prefix = getText("prefix");
+        if (!(commandSender instanceof Player) && args.length == 0) {
+            plugin.getServer().getConsoleSender().sendMessage(ChatColors.color(getText("messages.missing_argument", prefix).replace("{argument}", "player/setting")));
+            return false;
         }
-        return false;
+
+        switch (args.length) {
+            case 0:
+                if (hasPermission(commandSender, "treecapitator.getItem")) {
+                    TreecapitatorItem.giveItem((Player) commandSender);
+                    commandSender.sendMessage(ChatColors.color(getText("messages.get_axe", prefix)));
+                }
+                else {
+                    return false;
+                }
+                break;
+            case 1:
+                if (hasPermission(commandSender, "treecapitator.giveItem")) {
+                    try {
+                        Player player = Objects.requireNonNull(Bukkit.getPlayer(args[0]));
+                        TreecapitatorItem.giveItem(player);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.give_axe", prefix).replace("{player}", args[0])));
+                        player.sendMessage(ChatColors.color(getText("messages.other_get", prefix).replace("{player}", commandSender.getName())));
+                    }
+                    catch (NullPointerException e1) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.player_not_found", prefix).replace("{player}", args[0])));
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+                break;
+            default:
+                if (hasPermission(commandSender, "treecapitator.settings")) {
+                    int number;
+                    try {
+                        number = Integer.parseInt(args[1]);
+                    }
+                    catch (NumberFormatException e) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
+                        return false;
+                    }
+                    if (args[0].equalsIgnoreCase("maxLogs")) {
+                        BreakingBlocks.maxLogs = number;
+                        if (BreakingBlocks.maxLogs > dangerThreshold) {
+                            commandSender.sendMessage(warningMessage);
+                        }
+                        plugin.getConfig().set("settings.maxLogs", BreakingBlocks.maxLogs);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.set_maxLogs", prefix).replace("{amount}", String.valueOf(BreakingBlocks.maxLogs))));
+                    }
+                    else if (args[0].equalsIgnoreCase("cooldown")) {
+                        BreakingBlocks.cooldown = number;
+                        plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
+                        commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
+                    }
+                    else if (args[0].equalsIgnoreCase("test")) {
+                        assert commandSender instanceof Player;
+                        Material toBreak = Material.OAK_LOG;
+                        int radius = Integer.parseInt(args[1]);
+                        World world = ((Player) commandSender).getWorld();
+                        Block start = world.getBlockAt(0, world.getMaxHeight() - radius, 0);
+                        int previous = BreakingBlocks.maxLogs;
+                        List<Block> blocks = getBlocks(start, radius);
+                        BreakingBlocks.maxLogs = blocks.size();
+                        commandSender.sendMessage(blocks.size() + " blocks to process");
+                        for (Block block : blocks) {
+                            block.setType(toBreak);
+                        }
+                        BreakingBlocks.breakBlocks(start);
+                        BreakingBlocks.maxLogs = previous;
+                        new TestCheck(commandSender, start, toBreak, radius).run();
+                    }
+                    else {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
+                        return false;
+                    }
+                    try {
+                        plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
+                    }
+                    catch (IOException e) {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    return false;
+                }
+                break;
+        }
+        return true;
     }
 
     @Override
