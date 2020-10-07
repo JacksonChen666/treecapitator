@@ -27,10 +27,18 @@ jobs:
           java-version: 14
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Assemble with Gradle
+        run: ./gradlew assemble
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: treecapitator plugin
           path: build/libs/*
+      - name: Test with Gradle
+        run: ./gradlew test
+        continue-on-error: true
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: gradle test results
+          path: reports/**
