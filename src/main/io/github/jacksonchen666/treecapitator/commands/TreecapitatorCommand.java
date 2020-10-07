@@ -137,7 +137,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             temp.runTaskLater(plugin, 1L);
                         }
                         else {
-                            commandSender.sendMessage("Unknown setting.");
+                            commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
                             return false;
                         }
                         try {
@@ -147,6 +147,9 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             commandSender.sendMessage(ChatColors.color(getText("messages.save_failed")));
                             e.printStackTrace();
                         }
+                    }
+                    else {
+                        return false;
                     }
                     break;
             }

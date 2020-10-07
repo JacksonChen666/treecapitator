@@ -107,6 +107,20 @@ public class TreecapitatorCommandTest {
         result.assertSucceeded();
     }
 
+    @Test
+    public void testSettingNumberRequired() {
+        CommandResult result = server.execute("treecapitator", player1, "maxLogs", "lol");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cMust be a number"));
+        result.assertFailed();
+    }
+
+    @Test
+    public void testSettingUnknownSetting() {
+        CommandResult result = server.execute("treecapitator", player1, "adfsfeq", "1234");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cUnknown setting"));
+        result.assertFailed();
+    }
+
     @After
     public void tearDown() {
         MockBukkit.unmock();

@@ -5,6 +5,7 @@ messages:
   missing_permission: '{prefix} &cYou are missing permission: {permission}'
   player_not_found: '{prefix} &c{player} is not online!'
   number_required: '{prefix} &cMust be a number'
+  unknown_setting: '{prefix} &cUnknown setting'
   save_failed: '{prefix} &4Saving config failed. Config changes may be lost. Please check the console!'
   set_maxLogs: '{prefix} &aSet max logs to cut to {amount}'
   set_cooldown: '{prefix} &aSet cooldown to {amount} seconds'
