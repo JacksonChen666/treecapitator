@@ -11,7 +11,8 @@ messages:
   set_cooldown: '{prefix} &aSet cooldown to {amount} seconds'
   set_blocksPerTick: '{prefix} &aSet block to break per tick to {amount}'
   set_searchTimeout: '{prefix} &aSet max seconds for search to {amount}'
-  get_axe: '{prefix} Ok, here is your axe.'
+  get_axe: '{prefix} Ok, here is your treecapitator.'
+  give_axe: '{prefix} Gave {player} a treecapitator.'
 settings:
   maxLogs: 32 # Limit to how many logs it can do.
   cooldown: 2 # Seconds before the axe can be used to cut more.
