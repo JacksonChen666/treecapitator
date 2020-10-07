@@ -25,8 +25,8 @@ class TestCheck extends BukkitRunnable {
     @Override
     public void run() {
         List<Block> check = getBlocks(start, radius);
-        check.removeIf(block -> block.getType() == toBreak);
-        if (check.size() != 0) {
+        check.removeIf(block -> block.getType() != toBreak);
+        if (check.size() > 1) {
             commandSender.sendMessage("There are " + check.size() + " logs left uncut");
         }
         else {
