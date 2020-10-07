@@ -89,7 +89,7 @@ public class TreecapitatorCommandTest {
     public void testTreecapitator() {
         int radius = 5;
         server.execute("treecapitator", player1, "test", String.valueOf(radius));
-        Block start = server.getWorlds().get(0).getBlockAt(0, server.getWorlds().get(0).getMaxHeight() - 5, 0);
+        Block start = server.getWorlds().get(0).getBlockAt(0, server.getWorlds().get(0).getMaxHeight() - 25, 0);
         List<Block> blocks = getBlocks(start, 5);
         blocks.removeIf(block -> block.getType() != Material.OAK_LOG);
         Assert.assertTrue("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", blocks.size() > 1);
