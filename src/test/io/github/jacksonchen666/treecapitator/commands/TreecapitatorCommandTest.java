@@ -46,34 +46,34 @@ public class TreecapitatorCommandTest {
     public void testGiveItemToInvalidName() {
         CommandResult result = server.execute("treecapitator", player1, "NotAName");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cNotAName is not online!"));
-        result.assertSucceeded();
+        result.assertFailed(); // for the command, just check source code
     }
 
     @Test
     public void testGiveItemNonOp() {
         CommandResult result = server.execute("treecapitator", player2);
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing permission: treecapitator.getItem"));
-        result.assertSucceeded();
+        result.assertFailed();
     }
 
     @Test
     public void testGiveItemToOthersNonOp() {
         CommandResult result = server.execute("treecapitator", player2, player1.getName());
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing permission: treecapitator.giveItem"));
-        result.assertSucceeded();
+        result.assertFailed();
     }
 
     @Test
     public void testGiveItemInvalidNameNonOp() {
-        CommandResult result = server.execute("treecapitator", player2, "not_a_name");
+        CommandResult result = server.execute("treecapitator", player2, "NotAName");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing permission: treecapitator.giveItem"));
-        result.assertSucceeded();
+        result.assertFailed();
     }
 
     //    @Test
-    //    public void testTreecapitator() {
+    //    public void testTreecapitator() { // disabled because y level is too high and getMaxHeight is not implemented
     //        int radius = 5;
-    //        server.execute("treecapitator", player1,"test", String.valueOf(radius));
+    //        server.execute("treecapitator", player1, "test", String.valueOf(radius));
     //        Block start = server.getWorlds().get(0).getBlockAt(0, server.getWorlds().get(0).getMaxHeight() - 5, 0);
     //        List<Block> blocks = getBlocks(start, 5);
     //        blocks.removeIf(block -> block.getType() != Material.OAK_LOG);
@@ -97,7 +97,8 @@ public class TreecapitatorCommandTest {
     @Test
     public void testSettingMaxLogsDanger() {
         CommandResult result = server.execute("treecapitator", player1, "maxLogs", "32767");
-        result.assertResponse(ChatColors.color("&4&lWARNING! &cChoosing a number above 16384 could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY WAY, SHAPE, OR FORM."));
+        result.assertResponse(ChatColors.color("&4&lWARNING! &cChoosing a number above 16384 could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for extremely large numbers. &4&l&oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY WAY, SHAPE, OR FORM."));
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &aSet max logs to cut to 32767"));
         result.assertSucceeded();
     }
 

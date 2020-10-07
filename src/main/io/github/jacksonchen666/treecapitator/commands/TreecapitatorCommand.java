@@ -74,6 +74,9 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         TreecapitatorItem.giveItem((Player) commandSender);
                         commandSender.sendMessage(ChatColors.color(getText("messages.get_axe", prefix)));
                     }
+                    else {
+                        return false;
+                    }
                     break;
                 case 1:
                     if (hasPermission(commandSender, "treecapitator.giveItem")) {
@@ -87,6 +90,9 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             commandSender.sendMessage(ChatColors.color(getText("messages.player_not_found", prefix).replace("{player}", args[0])));
                             return false;
                         }
+                    }
+                    else {
+                        return false;
                     }
                     break;
                 default:
