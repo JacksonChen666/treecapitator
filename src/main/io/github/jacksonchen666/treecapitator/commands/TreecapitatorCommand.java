@@ -77,8 +77,10 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                 case 1:
                     if (hasPermission(commandSender, "treecapitator.giveItem")) {
                         try {
-                            TreecapitatorItem.giveItem(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
+                            Player player = Objects.requireNonNull(Bukkit.getPlayer(args[0]));
+                            TreecapitatorItem.giveItem(player);
                             commandSender.sendMessage(ChatColors.color(getText("messages.give_axe", prefix).replace("{player}", args[0])));
+                            player.sendMessage(ChatColors.color(getText("messages.other_get", prefix).replace("{player}", commandSender.getName())));
                         }
                         catch (NullPointerException e1) {
                             commandSender.sendMessage(ChatColors.color(getText("messages.player_not_found", prefix).replace("{player}", args[0])));
