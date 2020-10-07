@@ -5,6 +5,7 @@ import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -112,9 +113,11 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                         }
                         else if (args[0].equalsIgnoreCase("test")) {
-                            Block start = Bukkit.getWorlds().get(0).getBlockAt(0, 150, 0);
+                            assert commandSender instanceof Player;
                             Material toBreak = Material.OAK_LOG;
                             int radius = Integer.parseInt(args[1]);
+                            World world = ((Player) commandSender).getWorld();
+                            Block start = world.getBlockAt(0, world.getMaxHeight() - radius, 0);
                             int previous = BreakingBlocks.maxLogs;
                             List<Block> blocks = getBlocks(start, radius);
                             BreakingBlocks.maxLogs = blocks.size();
