@@ -2,12 +2,10 @@ package io.github.jacksonchen666.treecapitator.commands;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.WorldMock;
 import be.seeseemelk.mockbukkit.command.CommandResult;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import io.github.jacksonchen666.treecapitator.Treecapitator;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
-import org.bukkit.Material;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,8 +21,7 @@ public class TreecapitatorCommandTest {
     @Before
     public void setUp() {
         server = MockBukkit.mock();
-        //        server.addSimpleWorld("world");
-        server.addWorld(new WorldMock(Material.AIR, 256, 0));
+        server.addSimpleWorld("world");
         player1 = server.addPlayer();
         player1.setOp(true);
         player2 = server.addPlayer();
