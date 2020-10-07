@@ -33,6 +33,7 @@ public class TreecapitatorCommandTest {
         CommandResult result = server.execute("treecapitator", player1);
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Ok, here is your treecapitator."));
         Assert.assertTrue(Objects.requireNonNull(player1.getInventory()).contains(TreecapitatorItem.createItem()));
+        result.assertSucceeded();
     }
 
     @Test
@@ -40,6 +41,7 @@ public class TreecapitatorCommandTest {
         CommandResult result = server.execute("treecapitator", player1, player2.getName());
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Gave " + player2.getName() + " a treecapitator."));
         Assert.assertTrue(Objects.requireNonNull(player2.getInventory()).contains(TreecapitatorItem.createItem()));
+        result.assertSucceeded();
     }
 
     @Test
