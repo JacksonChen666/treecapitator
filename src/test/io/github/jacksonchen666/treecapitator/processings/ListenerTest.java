@@ -22,7 +22,6 @@ public class ListenerTest {
         server = MockBukkit.mock();
         server.addSimpleWorld("world");
         player1 = server.addPlayer();
-        player1.setOp(true);
         MockBukkit.load(Treecapitator.class);
     }
 
@@ -31,7 +30,7 @@ public class ListenerTest {
     public void onBlockBreak() {
         player1.getInventory().setItemInMainHand(TreecapitatorItem.createItem());
         World world = Objects.requireNonNull(server.getWorld("world"));
-        int y = 4;
+        int y = 5;
         while (world.getBlockAt(0, y, 0).getType() != Material.AIR) {
             y++;
         }
@@ -39,11 +38,9 @@ public class ListenerTest {
         for (Block block : blocks) {
             block.setType(BreakingBlocks.acceptableBlock[0]);
         }
-        server.getScheduler().performOneTick();
         player1.simulateBlockBreak(world.getBlockAt(0, y, 0));
-        server.getScheduler().performOneTick();
         blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y + 3, 0), 3);
-        Assert.assertFalse("Did not cut the entire thing.", blocks.stream().anyMatch(block -> block.getType() == BreakingBlocks.acceptableBlock[0]));
+        Assert.assertFalse("Did not cut the entire thing.", blocks.stream().anyMatch(BreakingBlocks::acceptableBlock));
     }
 
     @After
