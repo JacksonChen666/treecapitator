@@ -6,12 +6,13 @@ import be.seeseemelk.mockbukkit.command.CommandResult;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import io.github.jacksonchen666.treecapitator.Treecapitator;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
+import org.bukkit.inventory.ItemStack;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class TreecapitatorCommandTest {
     private ServerMock server;
@@ -32,7 +33,8 @@ public class TreecapitatorCommandTest {
     public void testGetItem() {
         CommandResult result = server.execute("treecapitator", player1);
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Ok, here is your treecapitator."));
-        Assert.assertTrue(Objects.requireNonNull(player1.getInventory()).contains(TreecapitatorItem.createItem()));
+        ItemStack item = TreecapitatorItem.createItem();
+        Assert.assertTrue(IntStream.range(0, 35).mapToObj(i -> player1.getInventory().getItem(i)).anyMatch(item::equals));
         result.assertSucceeded();
     }
 
@@ -40,7 +42,8 @@ public class TreecapitatorCommandTest {
     public void testGiveItemToOther() {
         CommandResult result = server.execute("treecapitator", player1, player2.getName());
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Gave " + player2.getName() + " a treecapitator."));
-        Assert.assertTrue(Objects.requireNonNull(player2.getInventory()).contains(TreecapitatorItem.createItem()));
+        ItemStack item = TreecapitatorItem.createItem();
+        Assert.assertTrue(IntStream.range(0, 35).mapToObj(i -> player2.getInventory().getItem(i)).anyMatch(item::equals));
         result.assertSucceeded();
     }
 
