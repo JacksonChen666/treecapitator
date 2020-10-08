@@ -10,7 +10,6 @@ from player and without permission
 /treecapitator sadasdf 123124
 cut down a tree with axe
 
-
 tab complete:
 /treecapitator
 /treecapitator maxLogs
