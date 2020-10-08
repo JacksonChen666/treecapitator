@@ -5,10 +5,7 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.command.CommandResult;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import io.github.jacksonchen666.treecapitator.Treecapitator;
-import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.junit.After;
 import org.junit.Assert;
@@ -17,10 +14,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.IntStream;
-
-import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.getBlocks;
 
 public class TreecapitatorCommandTest {
     private ServerMock server;
@@ -88,37 +82,6 @@ public class TreecapitatorCommandTest {
         CommandResult result = server.execute("treecapitator", player2, "maxLogs", "123456789");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing permission: treecapitator.settings"));
         result.assertFailed();
-    }
-
-    @Test
-    public void testTreecapitator() {
-        int radius = 5;
-        Block start = server.getWorlds().get(0).getBlockAt(0, 100, 0);
-        List<Block> blocks = getBlocks(start, radius);
-        Material toBreak = Material.OAK_LOG;
-        for (Block block : blocks) {
-            block.setType(toBreak);
-        }
-        int previous = BreakingBlocks.maxLogs;
-        BreakingBlocks.maxLogs = blocks.size();
-        class BreakingBlocksFixed extends BreakingBlocks {
-            public BreakingBlocksFixed(Block blockToBreak) {
-                super(blockToBreak);
-            }
-
-            @Override
-            public boolean breakBlock(Block block) {
-                if (!block.getType().isBlock()) {
-                    return false;
-                }
-                block.setType(Material.AIR);
-                return true;
-            }
-        }
-        new BreakingBlocksFixed(start).breakBlocks();
-        BreakingBlocks.maxLogs = previous;
-        blocks.removeIf(block -> block.getType() != toBreak);
-        Assert.assertEquals("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", 0, blocks.size());
     }
 
     @Test

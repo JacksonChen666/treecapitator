@@ -3,6 +3,7 @@ package io.github.jacksonchen666.treecapitator.processings;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import io.github.jacksonchen666.treecapitator.Treecapitator;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.junit.After;
 import org.junit.Assert;
@@ -46,6 +47,37 @@ public class BreakingBlocksTest {
                 break;
             }
         }
+    }
+
+    @Test
+    public void testBreakBlocks() {
+        int radius = 5;
+        Block start = server.getWorlds().get(0).getBlockAt(0, 100, 0);
+        List<Block> blocks = BreakingBlocks.getBlocks(start, radius);
+        Material toBreak = Material.OAK_LOG;
+        for (Block block : blocks) {
+            block.setType(toBreak);
+        }
+        int previous = BreakingBlocks.maxLogs;
+        BreakingBlocks.maxLogs = blocks.size();
+        class BreakingBlocksFixed extends BreakingBlocks {
+            public BreakingBlocksFixed(Block blockToBreak) {
+                super(blockToBreak);
+            }
+
+            @Override
+            public boolean breakBlock(Block block) {
+                if (!block.getType().isBlock()) {
+                    return false;
+                }
+                block.setType(Material.AIR);
+                return true;
+            }
+        }
+        new BreakingBlocksFixed(start).breakBlocks();
+        BreakingBlocks.maxLogs = previous;
+        blocks.removeIf(block -> block.getType() != toBreak);
+        Assert.assertEquals("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", 0, blocks.size());
     }
 
     @After
