@@ -169,7 +169,9 @@ public class TreecapitatorCommandTest {
         HashMap<String[], Integer> tests = new HashMap<>();
         tests.put(new String[] {""}, TreecapitatorCommand.arg2No0.size() + server.getOnlinePlayers().size());
         tests.put(new String[] {"maxLogs", ""}, 6);
+        tests.put(new String[] {"maxLogs", "16384", ""}, 0);
         tests.put(new String[] {"cooldown", ""}, 5);
+        tests.put(new String[] {"cooldown", "5", ""}, 0);
         tests.put(new String[] {player2.getName(), ""}, 0);
         for (String[] test : tests.keySet()) {
             if (TreecapitatorCommand.tabComplete(player1, test).size() != tests.get(test)) {
