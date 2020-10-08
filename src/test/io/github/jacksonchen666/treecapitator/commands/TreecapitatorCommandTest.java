@@ -173,16 +173,8 @@ public class TreecapitatorCommandTest {
         tests.put(new String[] {"cooldown", ""}, 5);
         tests.put(new String[] {"cooldown", "5", ""}, 0);
         tests.put(new String[] {player2.getName(), ""}, 0);
-        for (String[] test : tests.keySet()) {
-            if (TreecapitatorCommand.tabComplete(player1, test).size() != tests.get(test)) {
-                Assert.fail(Arrays.toString(test));
-            }
-        }
-        for (String[] test : tests.keySet()) {
-            if (TreecapitatorCommand.tabComplete(player2, test).size() != 0) {
-                Assert.fail(Arrays.toString(test));
-            }
-        }
+        tests.keySet().stream().filter(test -> TreecapitatorCommand.tabComplete(player1, test).size() != tests.get(test)).map(Arrays::toString).forEach(Assert::fail);
+        tests.keySet().stream().filter(test -> !(TreecapitatorCommand.tabComplete(player2, test).size() == 0)).map(Arrays::toString).forEach(Assert::fail);
     }
 
     @After
