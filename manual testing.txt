@@ -1,0 +1,18 @@
+from player and without permission and console
+/treecapitator
+
+from player and without permission
+/treecapitator SomeoneOnline
+/treecapitator SomeoneOffline
+/treecapitator cooldown 3
+/treecapitator maxLogs 32767
+/treecapitator maxLogs 16384
+/treecapitator sadasdf 123124
+cut down a tree with axe
+
+
+tab complete:
+/treecapitator
+/treecapitator maxLogs
+/treecapitator cooldown
+/treecapitator cooldown 2 (ask for more)
