@@ -24,7 +24,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
-    private static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
+    static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
     private final Treecapitator plugin;
 
     public TreecapitatorCommand(Treecapitator plugin) {
@@ -129,19 +129,18 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public static List<String> tabComplete(CommandSender sender, String[] args) {
         switch (args.length - 1) {
             case 1:
-                if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
-                    return IntStream.range(5, 11).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
+                if (sender.hasPermission("treecapitator.settings")) {
+                    if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
+                        return IntStream.range(5, 11).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
+                    }
+                    else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
+                        return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
+                    }
                 }
-                else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
-                    return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
-                }
-                else {
-                    return Collections.emptyList();
-                }
+                return Collections.emptyList();
             case 2:
                 return Collections.emptyList();
         }
@@ -153,5 +152,10 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             tabComplete.addAll(arg2No0);
         }
         return tabComplete;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return tabComplete(sender, args);
     }
 }

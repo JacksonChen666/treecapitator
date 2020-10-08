@@ -15,6 +15,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -160,6 +162,25 @@ public class TreecapitatorCommandTest {
         CommandResult result = server.executeConsole("treecapitator");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing arguments: player/setting"));
         result.assertFailed();
+    }
+
+    @Test
+    public void testTabComplete() {
+        HashMap<String[], Integer> tests = new HashMap<>();
+        tests.put(new String[] {""}, TreecapitatorCommand.arg2No0.size() + server.getOnlinePlayers().size());
+        tests.put(new String[] {"maxLogs", ""}, 6);
+        tests.put(new String[] {"cooldown", ""}, 5);
+        tests.put(new String[] {player2.getName(), ""}, 0);
+        for (String[] test : tests.keySet()) {
+            if (TreecapitatorCommand.tabComplete(player1, test).size() != tests.get(test)) {
+                Assert.fail(Arrays.toString(test));
+            }
+        }
+        for (String[] test : tests.keySet()) {
+            if (TreecapitatorCommand.tabComplete(player2, test).size() != 0) {
+                Assert.fail(Arrays.toString(test));
+            }
+        }
     }
 
     @After
