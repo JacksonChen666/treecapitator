@@ -13,10 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -148,8 +145,13 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             case 2:
                 return Collections.emptyList();
         }
-        List<String> tabComplete = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
-        tabComplete.addAll(arg2No0);
+        List<String> tabComplete = new ArrayList<>();
+        if (sender.hasPermission("treecapitator.giveItem")) {
+            tabComplete.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
+        }
+        if (sender.hasPermission("treecapitator.settings")) {
+            tabComplete.addAll(arg2No0);
+        }
         return tabComplete;
     }
 }
