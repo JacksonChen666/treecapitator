@@ -26,7 +26,7 @@ public class ListenerTest {
     }
 
     @Test
-    @Ignore(value = "breakNaturally in block method is not implemented.")
+    @Ignore(value = "Block#breakNaturally is not implemented.")
     public void onBlockBreak() {
         player1.getInventory().setItemInMainHand(TreecapitatorItem.createItem());
         World world = Objects.requireNonNull(server.getWorld("world"));
