@@ -30,7 +30,7 @@ public class Listener implements org.bukkit.event.Listener {
                         LocalTime.now().isAfter(cooldownTo.getOrDefault(player, LocalTime.now().minusSeconds(1))) && // check cooldown
                         CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) // match custom item
         )) {
-            BreakingBlocks.breakBlocks(block);
+            new BreakingBlocks(block).breakBlocks();
         }
     }
 }

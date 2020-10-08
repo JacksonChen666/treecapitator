@@ -4,9 +4,6 @@ import io.github.jacksonchen666.treecapitator.Treecapitator;
 import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,8 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.getBlocks;
 
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
@@ -116,23 +111,6 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         BreakingBlocks.cooldown = number;
                         plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
                         commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
-                    }
-                    else if (args[0].equalsIgnoreCase("test")) {
-                        assert commandSender instanceof Player;
-                        Material toBreak = Material.OAK_LOG;
-                        int radius = Integer.parseInt(args[1]);
-                        World world = ((Player) commandSender).getWorld();
-                        Block start = world.getBlockAt(0, world.getMaxHeight() - radius, 0);
-                        int previous = BreakingBlocks.maxLogs;
-                        List<Block> blocks = getBlocks(start, radius);
-                        BreakingBlocks.maxLogs = blocks.size();
-                        commandSender.sendMessage(blocks.size() + " blocks to process");
-                        for (Block block : blocks) {
-                            block.setType(toBreak);
-                        }
-                        BreakingBlocks.breakBlocks(start);
-                        BreakingBlocks.maxLogs = previous;
-                        new TestCheck(commandSender, start, toBreak, radius).run();
                     }
                     else {
                         commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
