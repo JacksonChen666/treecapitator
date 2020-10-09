@@ -129,7 +129,8 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    public static List<String> tabComplete(CommandSender sender, String[] args) {
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length - 1) {
             case 1:
                 if (sender.hasPermission("treecapitator.settings")) {
@@ -152,10 +153,5 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             tabComplete.addAll(arg2No0);
         }
         return tabComplete;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return tabComplete(sender, args);
     }
 }

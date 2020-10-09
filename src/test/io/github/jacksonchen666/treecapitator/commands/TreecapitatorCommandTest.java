@@ -6,6 +6,7 @@ import be.seeseemelk.mockbukkit.command.CommandResult;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import io.github.jacksonchen666.treecapitator.Treecapitator;
 import io.github.jacksonchen666.treecapitator.utils.ChatColors;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.inventory.ItemStack;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class TreecapitatorCommandTest {
@@ -129,6 +131,7 @@ public class TreecapitatorCommandTest {
 
     @Test
     public void testTabComplete() {
+        PluginCommand command = Objects.requireNonNull(server.getPluginCommand("treecapitator"));
         HashMap<String[], Integer> tests = new HashMap<>();
         tests.put(new String[] {""}, TreecapitatorCommand.arg2No0.size() + server.getOnlinePlayers().size());
         tests.put(new String[] {"maxLogs", ""}, 6);
@@ -136,8 +139,8 @@ public class TreecapitatorCommandTest {
         tests.put(new String[] {"cooldown", ""}, 5);
         tests.put(new String[] {"cooldown", "5", ""}, 0);
         tests.put(new String[] {player2.getName(), ""}, 0);
-        tests.keySet().stream().filter(test -> TreecapitatorCommand.tabComplete(player1, test).size() != tests.get(test)).map(Arrays::toString).forEach(Assert::fail);
-        tests.keySet().stream().filter(test -> !(TreecapitatorCommand.tabComplete(player2, test).size() == 0)).map(Arrays::toString).forEach(Assert::fail);
+        tests.keySet().stream().filter(test -> command.tabComplete(player1, "treecapitator", test).size() != tests.get(test)).map(Arrays::toString).forEach(Assert::fail);
+        tests.keySet().stream().filter(test -> !(command.tabComplete(player2, "treecapitator", test).size() == 0)).map(Arrays::toString).forEach(Assert::fail);
     }
 
     @After
