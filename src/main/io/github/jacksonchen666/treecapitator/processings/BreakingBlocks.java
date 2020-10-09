@@ -21,11 +21,26 @@ public class BreakingBlocks {
     public static int cooldown = 2;
     private final Block blockToBreak;
 
+    /**
+     * The constructor
+     *
+     * @param blockToBreak The block to break
+     */
     public BreakingBlocks(Block blockToBreak) {
         this.blockToBreak = blockToBreak;
+        this.breakBlocks();
     }
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
+
+    /**
+     * Gives a list of blocks from the starting point and a radius around the starting point.
+     * https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
+     *
+     * @param start  The starting point
+     * @param radius The radius
+     * @return List of blocks from the start and around the blocks
+     */
     public static List<Block> getBlocks(Block start, int radius) {
         List<Block> blocks = new ArrayList<>();
         for (double x = start.getX() - radius; x <= start.getX() + radius; x++)
@@ -35,14 +50,38 @@ public class BreakingBlocks {
         return blocks;
     }
 
+    /**
+     * Check if the block is acceptable
+     *
+     * @param material The material of the block
+     * @return Acceptable
+     */
     public static boolean acceptableBlock(Material material) {
         return Arrays.stream(acceptableBlock).anyMatch(material1 -> material == material1);
     }
 
+    /**
+     * Check if the block is acceptable
+     *
+     * @param block The block
+     * @return Acceptable
+     */
     public static boolean acceptableBlock(Block block) {
         return acceptableBlock(block.getType());
     }
 
+    /**
+     * Break the blocks around the blocks with the same material
+     *
+     * @param block The block to break
+     */
+    public static void breakBlocks(Block block) {
+        new BreakingBlocks(block);
+    }
+
+    /**
+     * Break the blocks around a block with the same material
+     */
     public final void breakBlocks() { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
         final List<Block> thisBreak = new ArrayList<>();
         final List<Block> lastBreak = new ArrayList<>(Collections.singletonList(blockToBreak));
@@ -64,6 +103,12 @@ public class BreakingBlocks {
         Bukkit.getLogger().info("Finished in " + (end - start) / 1E+6 + "ms");
     }
 
+    /**
+     * Break the block in some kind of replaceable way
+     *
+     * @param block The block to break
+     * @return If the block was broken
+     */
     public boolean breakBlock(Block block) {
         return block.breakNaturally();
     }

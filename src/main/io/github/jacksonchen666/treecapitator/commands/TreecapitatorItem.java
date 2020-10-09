@@ -20,10 +20,20 @@ public class TreecapitatorItem {
             ChatColor.DARK_PURPLE.toString() + "§lEPIC AXE"
     );
 
+    /**
+     * Give a player the item
+     *
+     * @param player The player to give the item to
+     */
     public static void giveItem(Player player) {
         player.getInventory().addItem(createItem());
     }
 
+    /**
+     * Create the item
+     *
+     * @return The item
+     */
     public static ItemStack createItem() {
         return CustomItemManager.customItem(new ItemStack(Material.GOLDEN_AXE), itemName, lore);
     }
