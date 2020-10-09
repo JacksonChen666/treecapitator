@@ -28,7 +28,6 @@ public class BreakingBlocks {
      */
     public BreakingBlocks(Block blockToBreak) {
         this.blockToBreak = blockToBreak;
-        this.breakBlocks();
     }
 
     // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
@@ -76,7 +75,7 @@ public class BreakingBlocks {
      * @param block The block to break
      */
     public static void breakBlocks(Block block) {
-        new BreakingBlocks(block);
+        new BreakingBlocks(block).breakBlocks();
     }
 
     /**
