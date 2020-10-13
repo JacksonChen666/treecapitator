@@ -5,10 +5,12 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import io.github.jacksonchen666.treecapitator.Treecapitator;
 import io.github.jacksonchen666.treecapitator.commands.TreecapitatorItem;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,20 +28,17 @@ public class ListenerTest {
     }
 
     @Test
-    @Ignore(value = "Block#breakNaturally is not implemented.")
     public void onBlockBreak() {
         player1.getInventory().setItemInMainHand(TreecapitatorItem.createItem());
         World world = Objects.requireNonNull(server.getWorld("world"));
-        int y = 5;
-        while (world.getBlockAt(0, y, 0).getType() != Material.AIR) {
-            y++;
-        }
-        List<Block> blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y + 3, 0), 3);
+        int y = 64;
+        List<Block> blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y, 0), 3);
         for (Block block : blocks) {
             block.setType(BreakingBlocks.acceptableBlock[0]);
         }
+        BreakingBlocks.maxLogs = blocks.size();
         player1.simulateBlockBreak(world.getBlockAt(0, y, 0));
-        blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y + 3, 0), 3);
+        blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y, 0), 3);
         Assert.assertFalse("Did not cut the entire thing.", blocks.stream().anyMatch(BreakingBlocks::acceptableBlock));
     }
 

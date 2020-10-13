@@ -89,7 +89,7 @@ public class BreakingBlocks {
         long start = System.nanoTime();
         while (lastBreak.size() != 0) {
             for (Block block : lastBreak) {
-                if (maxLogs > amount && acceptableBlock(block) && breakBlock(block)) {
+                if (maxLogs > amount && acceptableBlock(block) && block.breakNaturally()) {
                     thisBreak.addAll(getBlocks(block, 1));
                     amount++;
                 }
@@ -100,15 +100,5 @@ public class BreakingBlocks {
         }
         long end = System.nanoTime();
         Bukkit.getLogger().info("Finished in " + (end - start) / 1E+6 + "ms");
-    }
-
-    /**
-     * Break the block in some kind of replaceable way
-     *
-     * @param block The block to break
-     * @return If the block was broken
-     */
-    public boolean breakBlock(Block block) {
-        return block.breakNaturally();
     }
 }

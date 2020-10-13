@@ -52,7 +52,7 @@ public class BreakingBlocksTest {
     @Test
     public void testBreakBlocks() {
         int radius = 5;
-        Block start = server.getWorlds().get(0).getBlockAt(0, 100, 0);
+        Block start = server.getWorlds().get(0).getBlockAt(0, 64, 0);
         List<Block> blocks = BreakingBlocks.getBlocks(start, radius);
         Material toBreak = Material.OAK_LOG;
         for (Block block : blocks) {
@@ -60,21 +60,7 @@ public class BreakingBlocksTest {
         }
         int previous = BreakingBlocks.maxLogs;
         BreakingBlocks.maxLogs = blocks.size();
-        class BreakingBlocksFixed extends BreakingBlocks {
-            public BreakingBlocksFixed(Block blockToBreak) {
-                super(blockToBreak);
-            }
-
-            @Override
-            public boolean breakBlock(Block block) {
-                if (!block.getType().isBlock()) {
-                    return false;
-                }
-                block.setType(Material.AIR);
-                return true;
-            }
-        }
-        new BreakingBlocksFixed(start).breakBlocks();
+        new BreakingBlocks(start).breakBlocks();
         BreakingBlocks.maxLogs = previous;
         blocks.removeIf(block -> block.getType() != toBreak);
         Assert.assertEquals("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", 0, blocks.size());
