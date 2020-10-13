@@ -77,7 +77,7 @@ public class BreakingBlocksTest {
         }
         int previous = BreakingBlocks.maxLogs;
         BreakingBlocks.maxLogs = blocks.size();
-        new BreakingBlocks(start).breakBlocks();
+        BreakingBlocks.breakBlocks(start);
         BreakingBlocks.maxLogs = previous;
         blocks.removeIf(block -> block.getType() != toBreak);
         Assert.assertEquals("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", 0, blocks.size());

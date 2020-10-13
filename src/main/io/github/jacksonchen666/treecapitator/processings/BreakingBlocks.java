@@ -36,18 +36,6 @@ public class BreakingBlocks {
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
-    private final Block blockToBreak;
-
-    /**
-     * The constructor
-     *
-     * @param blockToBreak The block to break
-     */
-    public BreakingBlocks(Block blockToBreak) {
-        this.blockToBreak = blockToBreak;
-    }
-
-    // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
 
     /**
      * Gives a list of blocks from the starting point and a radius around the starting point.
@@ -57,6 +45,7 @@ public class BreakingBlocks {
      * @param radius The radius
      * @return List of blocks from the start and around the blocks
      */
+    // https://www.spigotmc.org/threads/tutorial-getting-blocks-in-a-cube-radius.64981/
     public static List<Block> getBlocks(Block start, int radius) {
         List<Block> blocks = new ArrayList<>();
         for (double x = start.getX() - radius; x <= start.getX() + radius; x++)
@@ -87,18 +76,11 @@ public class BreakingBlocks {
     }
 
     /**
-     * Break the blocks around the blocks with the same material
-     *
-     * @param block The block to break
-     */
-    public static void breakBlocks(Block block) {
-        new BreakingBlocks(block).breakBlocks();
-    }
-
-    /**
      * Break the blocks around a block with the same material
+     *
+     * @param blockToBreak The block to break
      */
-    public final void breakBlocks() { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
+    public static void breakBlocks(Block blockToBreak) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
         final List<Block> thisBreak = new ArrayList<>();
         final List<Block> lastBreak = new ArrayList<>(Collections.singletonList(blockToBreak));
         int amount = 0;
