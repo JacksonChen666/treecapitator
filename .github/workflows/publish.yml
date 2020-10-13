@@ -2,11 +2,11 @@ name: Create Release
 
 on:
   push:
-  branches: [ master ]
-  tags:
-    - 'v*'
-    - '!v**-alpha'
-    - '!v**-beta'
+    branches: [ master ]
+    tags:
+      - 'v*'
+      - '!v**-alpha'
+      - '!v**-beta'
 
 jobs:
   release:
