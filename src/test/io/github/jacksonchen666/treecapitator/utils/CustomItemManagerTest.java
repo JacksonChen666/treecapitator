@@ -30,7 +30,6 @@ import org.junit.Test;
 import java.util.Arrays;
 
 public class CustomItemManagerTest {
-
     @Before
     public void setUp() {
         MockBukkit.mock();
@@ -38,7 +37,7 @@ public class CustomItemManagerTest {
     }
 
     @Test
-    public void isCustomItem() {
+    public void testIsCustomItem() {
         ItemStack item = TreecapitatorItem.createItem();
         Assert.assertTrue("Expected true, got false from isCustomItem", CustomItemManager.isCustomItem(item, TreecapitatorItem.itemName, TreecapitatorItem.lore));
         ItemMeta meta = item.getItemMeta();

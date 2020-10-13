@@ -45,7 +45,7 @@ public class ListenerTest {
     }
 
     @Test
-    public void onBlockBreak() {
+    public void testOnBlockBreak() {
         player1.getInventory().setItemInMainHand(TreecapitatorItem.createItem());
         World world = Objects.requireNonNull(server.getWorld("world"));
         int y = 64;

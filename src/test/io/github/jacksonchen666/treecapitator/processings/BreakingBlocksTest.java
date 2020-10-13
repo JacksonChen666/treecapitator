@@ -50,13 +50,13 @@ public class BreakingBlocksTest {
     }
 
     @Test
-    public void getBlocks() {
+    public void testGetBlocks() {
         List<Block> blocks = BreakingBlocks.getBlocks(Objects.requireNonNull(server.getWorld("world")).getBlockAt(0, 50, 0), 10);
         Assert.assertEquals(9261, blocks.size());
     }
 
     @Test
-    public void acceptableBlock() {
+    public void testAcceptableBlocks() {
         List<Boolean> acceptables = Arrays.stream(BreakingBlocks.acceptableBlock).map(BreakingBlocks::acceptableBlock).collect(Collectors.toList());
         for (boolean bool : acceptables) {
             if (!bool) {
