@@ -37,7 +37,7 @@ jobs:
           name: treecapitator-plugin
           path: build/libs/*
   test:
-    name: Test code
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Get cached gradle files
