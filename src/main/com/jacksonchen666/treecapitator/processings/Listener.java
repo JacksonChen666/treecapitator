@@ -34,6 +34,7 @@ import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.accept
 import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
 
 public class Listener implements org.bukkit.event.Listener {
+    // TODO allow add or remove materials from this list
     public static final Material[] acceptedMaterials = new Material[] {Material.GOLDEN_AXE};
 
     @EventHandler

@@ -27,6 +27,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class BreakingBlocks {
+    // TODO allow adding or removing materials from this list
     public static final Material[] acceptableBlock = {
             Material.ACACIA_LOG, Material.BIRCH_LOG, Material.DARK_OAK_LOG, Material.JUNGLE_LOG, Material.OAK_LOG,
             Material.SPRUCE_LOG, Material.STRIPPED_ACACIA_LOG, Material.STRIPPED_BIRCH_LOG,
