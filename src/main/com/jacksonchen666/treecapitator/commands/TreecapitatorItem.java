@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.jacksonchen666.treecapitator.commands;
+package com.jacksonchen666.treecapitator.commands;
 
-import io.github.jacksonchen666.treecapitator.utils.CustomItemManager;
+import com.jacksonchen666.treecapitator.utils.CustomItemManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

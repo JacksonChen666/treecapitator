@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.jacksonchen666.treecapitator.processings;
+package com.jacksonchen666.treecapitator.processings;
 
-import io.github.jacksonchen666.treecapitator.commands.TreecapitatorItem;
-import io.github.jacksonchen666.treecapitator.utils.CustomItemManager;
+import com.jacksonchen666.treecapitator.commands.TreecapitatorItem;
+import com.jacksonchen666.treecapitator.utils.CustomItemManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -30,8 +30,8 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.acceptableBlock;
-import static io.github.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
+import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.acceptableBlock;
+import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
 
 public class Listener implements org.bukkit.event.Listener {
     public static final Material[] acceptedMaterials = new Material[] {Material.GOLDEN_AXE};

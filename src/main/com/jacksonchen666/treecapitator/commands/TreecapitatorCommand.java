@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.jacksonchen666.treecapitator.commands;
+package com.jacksonchen666.treecapitator.commands;
 
-import io.github.jacksonchen666.treecapitator.Treecapitator;
-import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
-import io.github.jacksonchen666.treecapitator.utils.ChatColors;
+import com.jacksonchen666.treecapitator.Treecapitator;
+import com.jacksonchen666.treecapitator.processings.BreakingBlocks;
+import com.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

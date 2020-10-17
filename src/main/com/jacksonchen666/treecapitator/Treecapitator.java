@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.jacksonchen666.treecapitator;
+package com.jacksonchen666.treecapitator;
 
-import io.github.jacksonchen666.treecapitator.commands.TreecapitatorCommand;
-import io.github.jacksonchen666.treecapitator.commands.TreecapitatorItem;
-import io.github.jacksonchen666.treecapitator.processings.BreakingBlocks;
-import io.github.jacksonchen666.treecapitator.processings.Listener;
+import com.jacksonchen666.treecapitator.commands.TreecapitatorCommand;
+import com.jacksonchen666.treecapitator.commands.TreecapitatorItem;
+import com.jacksonchen666.treecapitator.processings.BreakingBlocks;
+import com.jacksonchen666.treecapitator.processings.Listener;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
