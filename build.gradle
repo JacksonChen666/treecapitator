@@ -44,3 +44,8 @@ sourceSets {
     }
 }
 
+import org.apache.tools.ant.filters.*
+
+processResources {
+    filter ReplaceTokens, tokens: ["plugin.version": version]
+}
