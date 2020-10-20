@@ -30,8 +30,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.acceptableBlock;
-import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.cooldownTo;
+import static com.jacksonchen666.treecapitator.processings.BreakingBlocks.*;
 
 public class Listener implements org.bukkit.event.Listener {
     // TODO allow add or remove materials from this list
@@ -49,6 +48,7 @@ public class Listener implements org.bukkit.event.Listener {
                         CustomItemManager.isCustomItem(hand, TreecapitatorItem.itemName, TreecapitatorItem.lore) // match custom item
         )) {
             BreakingBlocks.breakBlocks(block);
+            cooldownTo.put(player, LocalTime.now().plusSeconds(cooldown));
         }
     }
 }
