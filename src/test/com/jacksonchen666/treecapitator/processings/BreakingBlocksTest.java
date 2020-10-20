@@ -19,7 +19,9 @@ package com.jacksonchen666.treecapitator.processings;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
+import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import com.jacksonchen666.treecapitator.Treecapitator;
+import com.jacksonchen666.treecapitator.commands.TreecapitatorItem;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.junit.After;
@@ -34,12 +36,15 @@ import java.util.stream.Collectors;
 
 public class BreakingBlocksTest {
     private ServerMock server;
+    private PlayerMock player1;
 
     @Before
     public void setUp() {
         server = MockBukkit.mock();
         server.addSimpleWorld("world");
+        player1 = server.addPlayer();
         MockBukkit.load(Treecapitator.class);
+        player1.getInventory().setItemInMainHand(TreecapitatorItem.createItem());
     }
 
     @Test
@@ -69,9 +74,9 @@ public class BreakingBlocksTest {
     @Test
     public void testBreakBlocks() {
         int radius = 5;
-        Block start = server.getWorlds().get(0).getBlockAt(0, 64, 0);
+        Block start = player1.getWorld().getBlockAt(0, 64, 0);
         List<Block> blocks = BreakingBlocks.getBlocks(start, radius);
-        Material toBreak = Material.OAK_LOG;
+        Material toBreak = BreakingBlocks.acceptableBlock[0];
         for (Block block : blocks) {
             block.setType(toBreak);
         }
@@ -81,6 +86,19 @@ public class BreakingBlocksTest {
         BreakingBlocks.maxLogs = previous;
         blocks.removeIf(block -> block.getType() != toBreak);
         Assert.assertEquals("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", 0, blocks.size());
+    }
+
+    @Test
+    public void testCooldown() {
+        List<Block> blocks = BreakingBlocks.getBlocks(player1.getWorld().getBlockAt(0, 64, 0), 1);
+        Material toBreak = BreakingBlocks.acceptableBlock[0];
+        blocks.forEach(block -> block.setType(toBreak));
+        player1.simulateBlockBreak(blocks.get(0));
+        blocks.stream().filter(BreakingBlocks::acceptableBlock).map(block1 -> "Failed to cut down logs").forEach(Assert::fail);
+        blocks.forEach(block -> block.setType(toBreak));
+        player1.simulateBlockBreak(blocks.get(0));
+        blocks.get(0).setType(toBreak);
+        blocks.stream().filter(block -> !BreakingBlocks.acceptableBlock(block)).map(block -> "Failed to not cut down logs").forEach(Assert::fail);
     }
 
     @After
