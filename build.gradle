@@ -21,7 +21,7 @@ plugins {
 }
 
 group 'com.jacksonchen666.treecapitator'
-version '1.2.2'
+version 'v1.2.2-test'
 
 import org.apache.tools.ant.filters.*
 

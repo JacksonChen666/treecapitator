@@ -36,8 +36,10 @@ jobs:
           release_name: "${{ github.ref }}: An interesting title"
           body: |
             In this new something release, there are following things done:
+
             - A thing
             - Another thing
+
             That's all for this release.
           draft: true
           prerelease: false
@@ -49,4 +51,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_name: treecapitator-${{ github.ref }}.jar
-          asset_path: ./build/libs/*.jar
+          asset_path: ./build/libs/treecapitator-${{ github.ref }}.jar
+          asset_content_type: application/jar
