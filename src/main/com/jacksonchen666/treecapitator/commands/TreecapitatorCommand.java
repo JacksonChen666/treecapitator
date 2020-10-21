@@ -106,9 +106,11 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                 break;
             default:
                 if (hasPermission(commandSender, "treecapitator.settings")) {
-                    int number;
+                    int number = -1;
                     try {
-                        number = Integer.parseInt(args[1]);
+                        if (!args[0].equalsIgnoreCase("blocksAndItems")) {
+                            number = Integer.parseInt(args[1]);
+                        }
                     }
                     catch (NumberFormatException e) {
                         commandSender.sendMessage(ChatColors.color(getText("messages.number_required", prefix)));
@@ -132,9 +134,9 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         boolean remove = args[1].equalsIgnoreCase("remove");
                         if (add || remove) {
                             if (args.length >= 3 && args[2].equalsIgnoreCase("item")) {
-                                Material item = Material.getMaterial(args[2].toUpperCase());
+                                Material item = Material.getMaterial(args[3].toUpperCase());
                                 if (item == null) {
-                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
                                     return false;
                                 }
                                 if (add) {
@@ -142,17 +144,20 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                                     commandSender.sendMessage(ChatColors.color(getText("messages.add_item", prefix).replace("{item}", item.toString())));
                                 }
                                 else {
-                                    BreakingBlocks.removeItem(item);
-                                    commandSender.sendMessage(ChatColors.color(getText("messages.remove_item", prefix).replace("{item}", item.toString())));
+                                    if (BreakingBlocks.removeItem(item)) {
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.remove_item", prefix).replace("{item}", item.toString())));
+                                    }
+                                    else {
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
+                                    }
                                 }
-                                plugin.getConfig().set("settings.blocksAndItems", BreakingBlocks.getAcceptableItemAndBlock());
-                                return true;
+                                plugin.getConfig().set("settings.blocksAndItems", Collections.singletonList(BreakingBlocks.getAcceptableItemAndBlock()));
                             }
                             if (args.length >= 4 && args[2].equalsIgnoreCase("block")) {
-                                Material item = Material.getMaterial(args[2].toUpperCase());
-                                Material block = Material.getMaterial(args[3].toUpperCase());
+                                Material item = Material.getMaterial(args[3].toUpperCase());
+                                Material block = Material.getMaterial(args[4].toUpperCase());
                                 if (item == null || block == null) {
-                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
                                     return false;
                                 }
                                 if (add) {
@@ -160,15 +165,20 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                                     commandSender.sendMessage(ChatColors.color(getText("messages.add_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
                                 }
                                 else {
-                                    BreakingBlocks.removeBlock(item, block);
-                                    commandSender.sendMessage(ChatColors.color(getText("messages.remove_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
+                                    if (BreakingBlocks.removeBlock(item, block)) {
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.remove_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
+                                    }
+                                    else {
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
+                                    }
                                 }
-                                plugin.getConfig().set("settings.blocksAndItems", BreakingBlocks.getAcceptableItemAndBlock());
-                                return true;
+                                plugin.getConfig().set("settings.blocksAndItems", Collections.singletonList(BreakingBlocks.getAcceptableItemAndBlock()));
                             }
                         }
-                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
-                        return false;
+                        else {
+                            commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
+                            return false;
+                        }
                     }
                     try {
                         plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
@@ -212,16 +222,34 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
             case 2:
-                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems")) {
+                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems") && (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove"))) {
                     return Arrays.asList("block", "item");
                 }
                 break;
             case 3:
-                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems") && (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove"))) {
-                    return Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
+                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems")) {
+                    boolean add = args[1].equalsIgnoreCase("add");
+                    boolean remove = args[1].equalsIgnoreCase("remove");
+                    boolean block = args[2].equalsIgnoreCase("block");
+                    boolean item = args[2].equalsIgnoreCase("item");
+                    if (block && (add || remove) || item && remove) {
+                        return BreakingBlocks.getAcceptableItemAndBlock().keySet().stream().map(material -> material.toString().toLowerCase()).collect(Collectors.toList());
+                    }
+                    else if (item && add) {
+                        return Arrays.stream(Material.values()).filter(Material::isItem).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
+                    }
+                }
+                break;
+            case 4:
+                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems")) {
+                    boolean add = args[1].equalsIgnoreCase("add");
+                    boolean remove = args[1].equalsIgnoreCase("remove");
+                    boolean block = args[2].equalsIgnoreCase("block");
+                    boolean item = args[2].equalsIgnoreCase("item");
                 }
                 break;
         }
+        //return Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
         return Collections.emptyList();
     }
 }
