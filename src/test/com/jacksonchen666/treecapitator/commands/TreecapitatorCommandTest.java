@@ -176,7 +176,7 @@ public class TreecapitatorCommandTest {
     }
 
     @Test
-    public void testBlocksAndItemsAddItemUnknown() {
+    public void testBlocksAndItemsAddItemUnknownItem() {
         CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "item", "no");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
         result.assertFailed();
@@ -190,8 +190,22 @@ public class TreecapitatorCommandTest {
     }
 
     @Test
+    public void testBlocksAndItemsRemoveBlockUnknownBlock() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "remove", "block", "golden_axe", "no");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
+        result.assertFailed();
+    }
+
+    @Test
     public void testBlocksAndItemsAddBlockUnknownItem() {
         CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "block", "no", "dirt");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
+        result.assertFailed();
+    }
+
+    @Test
+    public void testBlocksAndItemsRemoveBlockUnknownItem() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "remove", "block", "no", "dirt");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
         result.assertFailed();
     }
