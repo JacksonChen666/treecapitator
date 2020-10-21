@@ -47,18 +47,14 @@ public class BreakingBlocks {
         acceptableItemAndBlock.put(item, blocks);
     }
 
-    public static boolean removeBlock(Material item, Material block) {
-        List<Material> tempOld = acceptableItemAndBlock.get(item);
-        List<Material> temp = new ArrayList<>(tempOld);
+    public static void removeBlock(Material item, Material block) {
+        List<Material> temp = acceptableItemAndBlock.get(item);
         temp.remove(block);
         acceptableItemAndBlock.put(item, temp);
-        return acceptableItemAndBlock.get(item).size() != tempOld.size();
     }
 
-    public static boolean removeItem(Material item) {
-        Map<Material, List<Material>> temp = new HashMap<>(acceptableItemAndBlock);
+    public static void removeItem(Material item) {
         acceptableItemAndBlock.remove(item);
-        return temp.size() != acceptableItemAndBlock.size();
     }
 
     public static Map<Material, List<Material>> getAcceptableItemAndBlock() {

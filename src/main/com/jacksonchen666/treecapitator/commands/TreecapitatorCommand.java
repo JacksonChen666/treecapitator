@@ -148,12 +148,8 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                                     commandSender.sendMessage(ChatColors.color(getText("messages.added_item", prefix).replace("{item}", item.toString())));
                                 }
                                 else {
-                                    if (BreakingBlocks.removeItem(item)) {
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.removed_item", prefix).replace("{item}", item.toString())));
-                                    }
-                                    else {
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
-                                    }
+                                    BreakingBlocks.removeItem(item);
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.removed_item", prefix).replace("{item}", item.toString())));
                                 }
                                 saveBlocksAndItems();
                             }
@@ -176,12 +172,8 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                                     commandSender.sendMessage(ChatColors.color(getText("messages.added_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
                                 }
                                 else {
-                                    if (BreakingBlocks.removeBlock(item, block)) {
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.removed_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
-                                    }
-                                    else {
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
-                                    }
+                                    BreakingBlocks.removeBlock(item, block);
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.removed_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
                                 }
                                 saveBlocksAndItems();
                             }
