@@ -52,7 +52,7 @@ public class BreakingBlocks {
         List<Material> temp = new ArrayList<>(tempOld);
         temp.remove(block);
         acceptableItemAndBlock.put(item, temp);
-        return acceptableItemAndBlock.get(block).size() != tempOld.size();
+        return acceptableItemAndBlock.get(item).size() != tempOld.size();
     }
 
     public static boolean removeItem(Material item) {

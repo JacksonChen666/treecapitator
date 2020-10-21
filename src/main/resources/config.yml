@@ -14,15 +14,12 @@ messages:
   other_get: '{prefix} You got a treecapitator from {player}.'
   added_block: '{prefix} Added {block} to {item}.'
   added_item: '{prefix} Added {item} to list of usable items.'
-  remove_block: '{prefix} Removed {block} from {item}.'
-  remove_item: '{prefix} Removed {item} from list of usable items.'
+  removed_block: '{prefix} Removed {block} from {item}.'
+  removed_item: '{prefix} Removed {item} from list of usable items.'
   unknown_material: '{prefix} &4Unknown item {name}'
 settings:
   maxLogs: 32 # Limit to how many logs it can do.
   cooldown: 2 # Seconds before the axe can be used to cut more.
-  blocksAndItems: [ # All items must be upper case (plugin deals with that) and in minecraft Material enum (plugin fails to load if it doesn't exists).
-      GOLDEN_AXE: [ # The default
-          ACACIA_LOG, BIRCH_LOG, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG,
-          STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG
-      ]
-  ]
+  blocksAndItemsList: [ GOLDEN_AXE ] # All items in this list should contain all values below
+  blocksAndItems: # All items must be upper case (plugin deals with that) and in minecraft Material enum (plugin fails to load if it doesn't exists).
+    GOLDEN_AXE: [ ACACIA_LOG, BIRCH_LOG, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG ]
