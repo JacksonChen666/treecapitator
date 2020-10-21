@@ -34,6 +34,8 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class Treecapitator extends JavaPlugin {
@@ -50,15 +52,23 @@ public class Treecapitator extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
-        BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
 
         // get map config which is List<Map<?, ?>>
         // get the keys of Map<?, ?>
         // with the keys, process the value of the keys:
         // turn object into strings, then into material enum
         // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
-        getConfig().getMapList("settings.blocksAndItems").forEach(map -> map.keySet().forEach(o -> BreakingBlocks.putItem(Material.getMaterial(o.toString()), ((List<?>) map.get(o)).stream().map(listValue -> Material.getMaterial(listValue.toString())).collect(Collectors.toList()))));
+        // also throws NullPointerException if the given item doesn't exist and stops loading
+        try {
+            getConfig().getMapList("settings.blocksAndItems").forEach(map -> map.keySet().forEach(key -> BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(key.toString().toUpperCase())), ((List<?>) map.get(key)).stream().map(listValue -> Objects.requireNonNull(Material.getMaterial(listValue.toString().toUpperCase()))).collect(Collectors.toList()))));
+        }
+        catch (NullPointerException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);
+            return;
+        }
+
+        BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
+        BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
 
         new TreecapitatorCommand(this);
         getServer().getPluginManager().registerEvents(new Listener(), this);

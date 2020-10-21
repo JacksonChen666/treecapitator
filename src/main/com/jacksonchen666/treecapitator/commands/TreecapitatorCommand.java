@@ -38,7 +38,7 @@ import java.util.stream.IntStream;
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
     public static final int dangerThreshold = 16384;
-    static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "add", "remove");
+    static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "blocksAndItems");
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
@@ -127,46 +127,44 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         plugin.getConfig().set("settings.cooldown", BreakingBlocks.cooldown);
                         commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                     }
-                    else {
-                        boolean add = args[0].equalsIgnoreCase("add");
-                        boolean remove = args[0].equalsIgnoreCase("remove");
+                    else if (args[0].equalsIgnoreCase("blocksAndItems")) {
+                        boolean add = args[1].equalsIgnoreCase("add");
+                        boolean remove = args[1].equalsIgnoreCase("remove");
                         if (add || remove) {
-                            if (args.length >= 3) {
-                                if (args[1].equalsIgnoreCase("item")) {
-                                    Material item = Material.getMaterial(args[2]);
-                                    if (item == null) {
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
-                                        return false;
-                                    }
-                                    if (add) {
-                                        BreakingBlocks.putItem(item);
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.add_item", prefix).replace("{item}", item.toString())));
-                                    }
-                                    else {
-                                        BreakingBlocks.removeItem(item);
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.remove_item", prefix).replace("{item}", item.toString())));
-                                    }
-                                    return true;
+                            if (args.length >= 3 && args[2].equalsIgnoreCase("item")) {
+                                Material item = Material.getMaterial(args[2].toUpperCase());
+                                if (item == null) {
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
+                                    return false;
                                 }
+                                if (add) {
+                                    BreakingBlocks.putItem(item);
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.add_item", prefix).replace("{item}", item.toString())));
+                                }
+                                else {
+                                    BreakingBlocks.removeItem(item);
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.remove_item", prefix).replace("{item}", item.toString())));
+                                }
+                                plugin.getConfig().set("settings.blocksAndItems", BreakingBlocks.getAcceptableItemAndBlock());
+                                return true;
                             }
-                            if (args.length >= 4) {
-                                if (args[1].equalsIgnoreCase("block")) {
-                                    Material item = Material.getMaterial(args[2]);
-                                    Material block = Material.getMaterial(args[3]);
-                                    if (item == null || block == null) {
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
-                                        return false;
-                                    }
-                                    if (add) {
-                                        BreakingBlocks.putBlock(item, block);
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.add_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
-                                    }
-                                    else {
-                                        BreakingBlocks.removeBlock(item, block);
-                                        commandSender.sendMessage(ChatColors.color(getText("messages.remove_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
-                                    }
-                                    return true;
+                            if (args.length >= 4 && args[2].equalsIgnoreCase("block")) {
+                                Material item = Material.getMaterial(args[2].toUpperCase());
+                                Material block = Material.getMaterial(args[3].toUpperCase());
+                                if (item == null || block == null) {
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
+                                    return false;
                                 }
+                                if (add) {
+                                    BreakingBlocks.putBlock(item, block);
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.add_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
+                                }
+                                else {
+                                    BreakingBlocks.removeBlock(item, block);
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.remove_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
+                                }
+                                plugin.getConfig().set("settings.blocksAndItems", BreakingBlocks.getAcceptableItemAndBlock());
+                                return true;
                             }
                         }
                         commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
@@ -191,6 +189,15 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length - 1) {
+            case 0:
+                List<String> tabComplete = new ArrayList<>();
+                if (sender.hasPermission("treecapitator.giveItem")) {
+                    tabComplete.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
+                }
+                if (sender.hasPermission("treecapitator.settings")) {
+                    tabComplete.addAll(arg2No0);
+                }
+                return tabComplete;
             case 1:
                 if (sender.hasPermission("treecapitator.settings")) {
                     if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
@@ -199,18 +206,22 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                     else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
                         return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
                     }
+                    else if (args[0].equalsIgnoreCase("blocksAndItems")) {
+                        return Arrays.asList("add", "remove"); // /treecapitator _____
+                    }
                 }
-                return Collections.emptyList();
+                break;
             case 2:
-                return Collections.emptyList();
+                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems")) {
+                    return Arrays.asList("block", "item");
+                }
+                break;
+            case 3:
+                if (sender.hasPermission("treecapitator.settings") && args[0].equalsIgnoreCase("blocksAndItems") && (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove"))) {
+                    return Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
+                }
+                break;
         }
-        List<String> tabComplete = new ArrayList<>();
-        if (sender.hasPermission("treecapitator.giveItem")) {
-            tabComplete.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
-        }
-        if (sender.hasPermission("treecapitator.settings")) {
-            tabComplete.addAll(arg2No0);
-        }
-        return tabComplete;
+        return Collections.emptyList();
     }
 }
