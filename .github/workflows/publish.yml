@@ -29,6 +29,9 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Get the version without the V
+        id: get_version_v
+        run: echo ::set-output name=VERSION::${steps.get_version.outputs.VERSION/v/}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -52,6 +55,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_name: treecapitator-${{ steps.get_version.outputs.VERSION }}.jar
-          asset_path: ./build/libs/treecapitator-${{ steps.get_version.outputs.VERSION }}.jar
+          asset_name: treecapitator-${{ steps.get_version_v.outputs.VERSION }}.jar
+          asset_path: ./build/libs/treecapitator-${{ steps.get_version_v.outputs.VERSION }}.jar
           asset_content_type: application/jar
