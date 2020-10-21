@@ -61,13 +61,9 @@ public class Treecapitator extends JavaPlugin {
         try {
             List<Map<?, ?>> configOut = new ArrayList<>();
             List<String> blocksAndItemsList = getConfig().getStringList("settings.blocksAndItemsList");
-            for (String s : blocksAndItemsList) {
-                List<String> temp = getConfig().getStringList("settings.blocksAndItems." + s);
-                if (temp.size() == 0) {
-                    continue;
-                }
+            for (String item : blocksAndItemsList) {
                 Map<String, List<String>> temp2 = new HashMap<>();
-                temp2.put(s, temp);
+                temp2.put(item, getConfig().getStringList("settings.blocksAndItems." + item));
                 configOut.add(temp2);
             }
             configOut.forEach(map -> map.keySet().forEach(key -> BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(key.toString().toUpperCase())), ((List<?>) map.get(key)).stream().map(listValue -> Objects.requireNonNull(Material.getMaterial(listValue.toString().toUpperCase()))).collect(Collectors.toList()))));
@@ -76,8 +72,6 @@ public class Treecapitator extends JavaPlugin {
             Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);
             return;
         }
-
-        System.out.println(BreakingBlocks.getAcceptableItemAndBlock());
 
         BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
         BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");

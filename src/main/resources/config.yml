@@ -18,8 +18,25 @@ messages:
   removed_item: '{prefix} Removed {item} from list of usable items.'
   unknown_material: '{prefix} &4Unknown item {name}'
 settings:
-  maxLogs: 32 # Limit to how many logs it can do.
-  cooldown: 2 # Seconds before the axe can be used to cut more.
-  blocksAndItemsList: [ GOLDEN_AXE ] # All items in this list should contain all values below
-  blocksAndItems: # All items must be upper case (plugin deals with that) and in minecraft Material enum (plugin fails to load if it doesn't exists).
-    GOLDEN_AXE: [ ACACIA_LOG, BIRCH_LOG, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG ]
+  # Limit to how many logs it can do.
+  maxLogs: 32
+  # Seconds before the axe can be used to cut more.
+  cooldown: 2
+  # All items in the list should contain all key values at blocksAndItems
+  blocksAndItemsList:
+    - GOLDEN_AXE
+  # All items must be upper case (plugin deals with that) and in minecraft Material enum (plugin fails to load if it doesn't exists).
+  blocksAndItems:
+    GOLDEN_AXE:
+      - ACACIA_LOG
+      - BIRCH_LOG
+      - DARK_OAK_LOG
+      - JUNGLE_LOG
+      - OAK_LOG
+      - SPRUCE_LOG
+      - STRIPPED_ACACIA_LOG
+      - STRIPPED_BIRCH_LOG
+      - STRIPPED_DARK_OAK_LOG
+      - STRIPPED_JUNGLE_LOG
+      - STRIPPED_OAK_LOG
+      - STRIPPED_SPRUCE_LOG
