@@ -261,7 +261,6 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                     boolean add = args[1].equalsIgnoreCase("add");
                     boolean remove = args[1].equalsIgnoreCase("remove");
                     boolean block = args[2].equalsIgnoreCase("block");
-                    boolean item = args[2].equalsIgnoreCase("item");
                     if (block) {
                         if (add) {
                             return Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
