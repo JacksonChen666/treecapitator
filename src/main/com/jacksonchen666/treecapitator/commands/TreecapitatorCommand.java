@@ -130,6 +130,10 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                     }
                     else if (args[0].equalsIgnoreCase("blocksAndItems")) {
+                        if (args[1].equalsIgnoreCase("list")) {
+                            commandSender.sendMessage(BreakingBlocks.getAcceptableItemAndBlock().toString());
+                            return true;
+                        }
                         boolean add = args[1].equalsIgnoreCase("add");
                         boolean remove = args[1].equalsIgnoreCase("remove");
                         if (add || remove) {
@@ -226,7 +230,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
                     }
                     else if (args[0].equalsIgnoreCase("blocksAndItems")) {
-                        return Arrays.asList("add", "remove"); // /treecapitator _____
+                        return Arrays.asList("add", "remove", "list"); // /treecapitator _____
                     }
                 }
                 break;
