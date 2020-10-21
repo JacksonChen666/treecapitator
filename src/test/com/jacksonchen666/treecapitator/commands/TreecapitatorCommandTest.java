@@ -235,6 +235,7 @@ public class TreecapitatorCommandTest {
         tests.put(new String[] {"cooldown", "5", ""}, 0);
         tests.put(new String[] {player2.getName(), ""}, 0);
         tests.put(new String[] {"blocksAndItems", ""}, 3);
+        tests.put(new String[] {"blocksAndItems", "no", "", ""}, 0);
         tests.put(new String[] {"blocksAndItems", "add", ""}, 2);
         tests.put(new String[] {"blocksAndItems", "add", "item", ""}, (int) Arrays.stream(Material.values()).filter(Material::isItem).map(material -> material.toString().toLowerCase()).count());
         tests.put(new String[] {"blocksAndItems", "add", "item", "GOLDEN_AXE", ""}, 0);
