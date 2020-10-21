@@ -33,15 +33,6 @@ public class BreakingBlocks {
     public static int maxLogs = 32;
     public static int cooldown = 2;
 
-    static {
-        acceptableItemAndBlock.put(Material.GOLDEN_AXE, Arrays.asList(
-                Material.ACACIA_LOG, Material.BIRCH_LOG, Material.DARK_OAK_LOG, Material.JUNGLE_LOG, Material.OAK_LOG,
-                Material.SPRUCE_LOG, Material.STRIPPED_ACACIA_LOG, Material.STRIPPED_BIRCH_LOG,
-                Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
-                Material.STRIPPED_SPRUCE_LOG
-        ));
-    }
-
     public static void putBlock(Material item, Material block) {
         List<Material> temp = acceptableItemAndBlock.get(item);
         temp.add(block);
