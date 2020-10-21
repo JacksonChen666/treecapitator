@@ -29,7 +29,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,8 +49,8 @@ public class BreakingBlocksTest {
     @Test
     public void testAcceptableBlock() {
         Block block = Objects.requireNonNull(server.getWorld("world")).getBlockAt(0, 0, 0);
-        block.setType(BreakingBlocks.acceptableBlock[0]);
-        Assert.assertTrue(BreakingBlocks.acceptableBlock(block));
+        block.setType(BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).get(0));
+        Assert.assertTrue(BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block));
     }
 
     @Test
@@ -62,7 +61,7 @@ public class BreakingBlocksTest {
 
     @Test
     public void testAcceptableBlocks() {
-        List<Boolean> acceptables = Arrays.stream(BreakingBlocks.acceptableBlock).map(BreakingBlocks::acceptableBlock).collect(Collectors.toList());
+        List<Boolean> acceptables = BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).stream().map(material -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, material)).collect(Collectors.toList());
         for (boolean bool : acceptables) {
             if (!bool) {
                 Assert.fail("Not all met the correct condition");
@@ -76,13 +75,13 @@ public class BreakingBlocksTest {
         int radius = 5;
         Block start = player1.getWorld().getBlockAt(0, 64, 0);
         List<Block> blocks = BreakingBlocks.getBlocks(start, radius);
-        Material toBreak = BreakingBlocks.acceptableBlock[0];
+        Material toBreak = BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).get(0);
         for (Block block : blocks) {
             block.setType(toBreak);
         }
         int previous = BreakingBlocks.maxLogs;
         BreakingBlocks.maxLogs = blocks.size();
-        BreakingBlocks.breakBlocks(start);
+        BreakingBlocks.breakBlocks(player1, start);
         BreakingBlocks.maxLogs = previous;
         blocks.removeIf(block -> block.getType() != toBreak);
         Assert.assertEquals("Did not finish cutting logs down. " + blocks.size() + " blocks left uncut.", 0, blocks.size());
@@ -91,14 +90,14 @@ public class BreakingBlocksTest {
     @Test
     public void testCooldown() {
         List<Block> blocks = BreakingBlocks.getBlocks(player1.getWorld().getBlockAt(0, 64, 0), 1);
-        Material toBreak = BreakingBlocks.acceptableBlock[0];
+        Material toBreak = BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).get(0);
         blocks.forEach(block -> block.setType(toBreak));
         player1.simulateBlockBreak(blocks.get(0));
-        blocks.stream().filter(BreakingBlocks::acceptableBlock).map(block1 -> "Failed to cut down logs").forEach(Assert::fail);
+        blocks.stream().filter(block2 -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block2)).map(block1 -> "Failed to cut down logs").forEach(Assert::fail);
         blocks.forEach(block -> block.setType(toBreak));
         player1.simulateBlockBreak(blocks.get(0));
         blocks.get(0).setType(toBreak);
-        blocks.stream().filter(block -> !BreakingBlocks.acceptableBlock(block)).map(block -> "Failed to not cut down logs").forEach(Assert::fail);
+        blocks.stream().filter(block -> !BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block)).map(block -> "Failed to not cut down logs").forEach(Assert::fail);
     }
 
     @After

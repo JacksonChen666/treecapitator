@@ -22,6 +22,7 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import com.jacksonchen666.treecapitator.Treecapitator;
 import com.jacksonchen666.treecapitator.commands.TreecapitatorItem;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.junit.After;
@@ -51,12 +52,12 @@ public class ListenerTest {
         int y = 64;
         List<Block> blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y, 0), 3);
         for (Block block : blocks) {
-            block.setType(BreakingBlocks.acceptableBlock[0]);
+            block.setType(BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).get(0));
         }
         BreakingBlocks.maxLogs = blocks.size();
         player1.simulateBlockBreak(world.getBlockAt(0, y, 0));
         blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y, 0), 3);
-        Assert.assertFalse("Did not cut the entire thing.", blocks.stream().anyMatch(BreakingBlocks::acceptableBlock));
+        Assert.assertFalse("Did not cut the entire thing.", blocks.stream().anyMatch(block -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block)));
     }
 
     @After

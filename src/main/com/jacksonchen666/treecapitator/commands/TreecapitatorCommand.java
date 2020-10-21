@@ -21,6 +21,7 @@ import com.jacksonchen666.treecapitator.Treecapitator;
 import com.jacksonchen666.treecapitator.processings.BreakingBlocks;
 import com.jacksonchen666.treecapitator.utils.ChatColors;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,11 +38,11 @@ import java.util.stream.IntStream;
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
     public static final int dangerThreshold = 16384;
+    static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown", "add", "remove");
     private static final String warningMessage = "§4§lWARNING! §cChoosing a number above " + dangerThreshold + " " +
             "could cause server crashes and data loss. Consider choosing a smaller number, as it's not intended for " +
             "extremely large numbers. §4§l§oTHE CREATOR IS NOT RESPONSIBLE FOR ANY DAMAGES DONE BY THE USER IN ANY " +
             "WAY, SHAPE, OR FORM.";
-    static final List<String> arg2No0 = Arrays.asList("maxLogs", "cooldown");
     private final Treecapitator plugin;
 
     public TreecapitatorCommand(Treecapitator plugin) {
@@ -127,6 +128,47 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                         commandSender.sendMessage(ChatColors.color(getText("messages.set_cooldown", prefix).replace("{amount}", String.valueOf(BreakingBlocks.cooldown))));
                     }
                     else {
+                        boolean add = args[0].equalsIgnoreCase("add");
+                        boolean remove = args[0].equalsIgnoreCase("remove");
+                        if (add || remove) {
+                            if (args.length >= 3) {
+                                if (args[1].equalsIgnoreCase("item")) {
+                                    Material item = Material.getMaterial(args[2]);
+                                    if (item == null) {
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
+                                        return false;
+                                    }
+                                    if (add) {
+                                        BreakingBlocks.putItem(item);
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.add_item", prefix).replace("{item}", item.toString())));
+                                    }
+                                    else {
+                                        BreakingBlocks.removeItem(item);
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.remove_item", prefix).replace("{item}", item.toString())));
+                                    }
+                                    return true;
+                                }
+                            }
+                            if (args.length >= 4) {
+                                if (args[1].equalsIgnoreCase("block")) {
+                                    Material item = Material.getMaterial(args[2]);
+                                    Material block = Material.getMaterial(args[3]);
+                                    if (item == null || block == null) {
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[2])));
+                                        return false;
+                                    }
+                                    if (add) {
+                                        BreakingBlocks.putBlock(item, block);
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.add_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
+                                    }
+                                    else {
+                                        BreakingBlocks.removeBlock(item, block);
+                                        commandSender.sendMessage(ChatColors.color(getText("messages.remove_block", prefix).replace("{item}", item.toString()).replace("{block}", block.toString())));
+                                    }
+                                    return true;
+                                }
+                            }
+                        }
                         commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
                         return false;
                     }

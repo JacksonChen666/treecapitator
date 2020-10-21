@@ -22,21 +22,53 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalTime;
 import java.util.*;
 
 public class BreakingBlocks {
-    // TODO allow adding or removing materials from this list
-    public static final Material[] acceptableBlock = {
-            Material.ACACIA_LOG, Material.BIRCH_LOG, Material.DARK_OAK_LOG, Material.JUNGLE_LOG, Material.OAK_LOG,
-            Material.SPRUCE_LOG, Material.STRIPPED_ACACIA_LOG, Material.STRIPPED_BIRCH_LOG,
-            Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
-            Material.STRIPPED_SPRUCE_LOG
-    };
     protected static final Map<Player, LocalTime> cooldownTo = new HashMap<>();
+    private static final Map<Material, List<Material>> acceptableItemAndBlock = new HashMap<>();
     public static int maxLogs = 32;
     public static int cooldown = 2;
+
+    static {
+        acceptableItemAndBlock.put(Material.GOLDEN_AXE, Arrays.asList(
+                Material.ACACIA_LOG, Material.BIRCH_LOG, Material.DARK_OAK_LOG, Material.JUNGLE_LOG, Material.OAK_LOG,
+                Material.SPRUCE_LOG, Material.STRIPPED_ACACIA_LOG, Material.STRIPPED_BIRCH_LOG,
+                Material.STRIPPED_DARK_OAK_LOG, Material.STRIPPED_JUNGLE_LOG, Material.STRIPPED_OAK_LOG,
+                Material.STRIPPED_SPRUCE_LOG
+        ));
+    }
+
+    public static void putBlock(Material item, Material block) {
+        List<Material> temp = acceptableItemAndBlock.get(item);
+        temp.add(block);
+        acceptableItemAndBlock.put(item, temp);
+    }
+
+    public static void putItem(Material item) {
+        putItem(item, new ArrayList<>());
+    }
+
+    public static void putItem(Material item, List<Material> blocks) {
+        acceptableItemAndBlock.put(item, blocks);
+    }
+
+    public static void removeBlock(Material item, Material block) {
+        List<Material> temp = acceptableItemAndBlock.get(item);
+        temp.remove(block);
+        acceptableItemAndBlock.put(item, temp);
+    }
+
+    public static void removeItem(Material item) {
+        acceptableItemAndBlock.remove(item);
+    }
+
+    public static Map<Material, List<Material>> getAcceptableItemAndBlock() {
+        return acceptableItemAndBlock;
+    }
 
     /**
      * Gives a list of blocks from the starting point and a radius around the starting point.
@@ -59,29 +91,54 @@ public class BreakingBlocks {
     /**
      * Check if the block is acceptable
      *
-     * @param material The material of the block
+     * @param item  The material of the item
+     * @param block The material of the block
      * @return Acceptable
      */
-    public static boolean acceptableBlock(Material material) {
-        return Arrays.stream(acceptableBlock).anyMatch(material1 -> material == material1);
+    public static boolean acceptableItemAndBlock(Material item, Material block) {
+        return acceptableItemAndBlock.get(item).stream().anyMatch(material -> block == material);
     }
 
     /**
      * Check if the block is acceptable
      *
+     * @param item  The item
      * @param block The block
      * @return Acceptable
      */
-    public static boolean acceptableBlock(Block block) {
-        return acceptableBlock(block.getType());
+    public static boolean acceptableItemAndBlock(ItemStack item, Block block) {
+        return acceptableItemAndBlock(item.getType(), block.getType());
+    }
+
+    /**
+     * Check if the block is acceptable
+     *
+     * @param item  The item
+     * @param block The material of the block
+     * @return Acceptable
+     */
+    public static boolean acceptableItemAndBlock(ItemStack item, Material block) {
+        return acceptableItemAndBlock(item.getType(), block);
+    }
+
+    /**
+     * Check if the block is acceptable
+     *
+     * @param item  The material of the item
+     * @param block The block
+     * @return Acceptable
+     */
+    public static boolean acceptableItemAndBlock(Material item, Block block) {
+        return acceptableItemAndBlock(item, block.getType());
     }
 
     /**
      * Break the blocks around a block with the same material
      *
+     * @param player       The player
      * @param blockToBreak The block to break
      */
-    public static void breakBlocks(Block blockToBreak) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
+    public static void breakBlocks(Player player, Block blockToBreak) { // 9261 blocks from 500ms (not near the cutting) to 1200ms (near the cutting)
         final List<Block> thisBreak = new ArrayList<>();
         final List<Block> lastBreak = new ArrayList<>(Collections.singletonList(blockToBreak));
         int amount = 0;
@@ -89,7 +146,7 @@ public class BreakingBlocks {
         long start = System.nanoTime();
         while (lastBreak.size() != 0) {
             for (Block block : lastBreak) {
-                if (maxLogs > amount && acceptableBlock(block) && block.breakNaturally()) {
+                if (maxLogs > amount && acceptableItemAndBlock(player.getInventory().getItemInMainHand(), block) && block.breakNaturally()) {
                     thisBreak.addAll(getBlocks(block, 1));
                     amount++;
                 }
