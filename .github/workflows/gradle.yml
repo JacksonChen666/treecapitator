@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Assemble
     runs-on: ubuntu-latest
     steps:
       - name: Get cached gradle files
