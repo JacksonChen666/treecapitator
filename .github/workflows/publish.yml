@@ -31,7 +31,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Get the version without the V
         id: get_version_v
-        run: echo ::set-output name=VERSION::${steps.get_version.outputs.VERSION/v/}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
