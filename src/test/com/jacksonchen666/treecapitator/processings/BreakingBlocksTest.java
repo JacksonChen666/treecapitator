@@ -32,6 +32,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BreakingBlocksTest {
     private ServerMock server;
@@ -62,12 +63,8 @@ public class BreakingBlocksTest {
     @Test
     public void testAcceptableBlocks() {
         List<Boolean> acceptables = BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).stream().map(material -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, material)).collect(Collectors.toList());
-        for (boolean bool : acceptables) {
-            if (!bool) {
-                Assert.fail("Not all met the correct condition");
-                break;
-            }
-        }
+        List<Boolean> match = IntStream.range(0, acceptables.size()).mapToObj(i -> true).collect(Collectors.toList());
+        Assert.assertEquals("Acceptables does not match all items", match, acceptables);
     }
 
     @Test
