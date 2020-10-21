@@ -13,9 +13,9 @@ messages:
   give_axe: '{prefix} Gave {player} a treecapitator.'
   other_get: '{prefix} You got a treecapitator from {player}.'
   added_block: '{prefix} Added {block} to {item}.'
-  added_item: '{prefix} Added {item} to list of usable items.'
+  added_item: '{prefix} Added {item} to the list of usable items.'
   removed_block: '{prefix} Removed {block} from {item}.'
-  removed_item: '{prefix} Removed {item} from list of usable items.'
+  removed_item: '{prefix} Removed {item} from the list of usable items.'
   unknown_material: '{prefix} &4Unknown item {name}'
 settings:
   # Limit to how many logs it can do.

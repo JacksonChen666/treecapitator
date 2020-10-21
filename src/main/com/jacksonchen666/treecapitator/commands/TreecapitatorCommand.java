@@ -184,6 +184,10 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                             return false;
                         }
                     }
+                    else {
+                        commandSender.sendMessage(ChatColors.color(getText("messages.unknown_setting", prefix)));
+                        return false;
+                    }
                     try {
                         plugin.getConfig().save(new File(plugin.getDataFolder(), "config.yml"));
                     }

@@ -23,6 +23,7 @@ import be.seeseemelk.mockbukkit.command.CommandResult;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import com.jacksonchen666.treecapitator.Treecapitator;
 import com.jacksonchen666.treecapitator.utils.ChatColors;
+import org.bukkit.Material;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.inventory.ItemStack;
 import org.junit.After;
@@ -140,6 +141,41 @@ public class TreecapitatorCommandTest {
     }
 
     @Test
+    public void testBlocksAndItemsUnknownSetting() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "lol no");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cUnknown setting"));
+        result.assertFailed();
+    }
+
+    @Test
+    public void testBlocksAndItemsAddItem() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "item", "golden_axe");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Added GOLDEN_AXE to the list of usable items."));
+        result.assertSucceeded();
+    }
+
+    @Test
+    public void testBlocksAndItemsAddBlock() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "block", "golden_axe", "dirt");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Added DIRT to GOLDEN_AXE."));
+        result.assertSucceeded();
+    }
+
+    @Test
+    public void testBlocksAndItemsRemoveItem() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "remove", "item", "golden_axe");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Removed GOLDEN_AXE from the list of usable items."));
+        result.assertSucceeded();
+    }
+
+    @Test
+    public void testBlocksAndItemsRemoveBlock() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "remove", "block", "golden_axe", "oak_log");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Removed OAK_LOG from GOLDEN_AXE."));
+        result.assertSucceeded();
+    }
+
+    @Test
     public void testConsoleError() {
         CommandResult result = server.executeConsole("treecapitator");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing arguments: player/setting"));
@@ -156,6 +192,18 @@ public class TreecapitatorCommandTest {
         tests.put(new String[] {"cooldown", ""}, 5);
         tests.put(new String[] {"cooldown", "5", ""}, 0);
         tests.put(new String[] {player2.getName(), ""}, 0);
+        tests.put(new String[] {"blocksAndItems", ""}, 3);
+        tests.put(new String[] {"blocksAndItems", "add", ""}, 2);
+        tests.put(new String[] {"blocksAndItems", "add", "item", ""}, (int) Arrays.stream(Material.values()).filter(Material::isItem).map(material -> material.toString().toLowerCase()).count());
+        tests.put(new String[] {"blocksAndItems", "add", "item", "GOLDEN_AXE", ""}, 0);
+        tests.put(new String[] {"blocksAndItems", "add", "block", ""}, 1);
+        tests.put(new String[] {"blocksAndItems", "add", "block", "GOLDEN_AXE", ""}, (int) Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).count());
+        tests.put(new String[] {"blocksAndItems", "remove", ""}, 2);
+        tests.put(new String[] {"blocksAndItems", "remove", "item", ""}, 1);
+        tests.put(new String[] {"blocksAndItems", "remove", "item", "GOLDEN_AXE", ""}, 0);
+        tests.put(new String[] {"blocksAndItems", "remove", "block", ""}, 1);
+        tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", ""}, 12);
+        tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", "OAK_LOG", ""}, 0);
         tests.keySet().stream().filter(test -> command.tabComplete(player1, "treecapitator", test).size() != tests.get(test)).map(Arrays::toString).forEach(Assert::fail);
         tests.keySet().stream().filter(test -> !(command.tabComplete(player2, "treecapitator", test).size() == 0)).map(Arrays::toString).forEach(Assert::fail);
     }
