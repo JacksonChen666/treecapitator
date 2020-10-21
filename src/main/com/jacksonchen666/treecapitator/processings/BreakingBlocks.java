@@ -108,17 +108,6 @@ public class BreakingBlocks {
     /**
      * Check if the block is acceptable
      *
-     * @param item  The item
-     * @param block The material of the block
-     * @return Acceptable
-     */
-    public static boolean acceptableItemAndBlock(ItemStack item, Material block) {
-        return acceptableItemAndBlock(item.getType(), block);
-    }
-
-    /**
-     * Check if the block is acceptable
-     *
      * @param item  The material of the item
      * @param block The block
      * @return Acceptable

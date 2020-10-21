@@ -161,7 +161,14 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                                 Material item = Material.getMaterial(args[3].toUpperCase());
                                 Material block = Material.getMaterial(args[4].toUpperCase());
                                 if (item == null || block == null) {
-                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", args[3])));
+                                    String replaceTo = null;
+                                    if (item == null) {
+                                        replaceTo = args[3];
+                                    }
+                                    if (block == null) {
+                                        replaceTo = args[4];
+                                    }
+                                    commandSender.sendMessage(ChatColors.color(getText("messages.unknown_material", prefix).replace("{name}", replaceTo)));
                                     return false;
                                 }
                                 if (add) {

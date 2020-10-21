@@ -176,6 +176,34 @@ public class TreecapitatorCommandTest {
     }
 
     @Test
+    public void testBlocksAndItemsAddItemUnknown() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "item", "no");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
+        result.assertFailed();
+    }
+
+    @Test
+    public void testBlocksAndItemsAddBlockUnknownBlock() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "block", "golden_axe", "no");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
+        result.assertFailed();
+    }
+
+    @Test
+    public void testBlocksAndItemsAddBlockUnknownItem() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "add", "block", "no", "dirt");
+        result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &4Unknown item no"));
+        result.assertFailed();
+    }
+
+    @Test
+    public void testBlocksAndItemsList() {
+        CommandResult result = server.execute("treecapitator", player1, "blocksAndItems", "list");
+        result.assertResponse("{GOLDEN_AXE=[ACACIA_LOG, BIRCH_LOG, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG]}");
+        result.assertSucceeded();
+    }
+
+    @Test
     public void testConsoleError() {
         CommandResult result = server.executeConsole("treecapitator");
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r &cYou are missing arguments: player/setting"));
