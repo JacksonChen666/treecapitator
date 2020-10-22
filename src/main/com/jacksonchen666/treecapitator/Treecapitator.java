@@ -53,20 +53,20 @@ public class Treecapitator extends JavaPlugin {
         saveDefaultConfig();
 
         try {
-            List<Map<?, ?>> configOut = new ArrayList<>();
+            List<Map<String, List<String>>> configOut = new ArrayList<>();
             List<String> blocksAndItemsList = getConfig().getStringList("settings.blocksAndItemsList");
             for (String item : blocksAndItemsList) {
                 Map<String, List<String>> temp2 = new HashMap<>();
                 temp2.put(item, getConfig().getStringList("settings.blocksAndItems." + item));
                 configOut.add(temp2);
             }
-            // get map config which is List<Map<?, ?>>
-            // get the keys of Map<?, ?>
+            // get configOut which is map from getConfig but more reliable than a map
+            // get the keys of the Map
             // with the keys, process the value of the keys:
             // turn object into strings, then into material enum
             // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
             // also throws NullPointerException if the given item doesn't exist and stops loading
-            configOut.forEach(map -> map.keySet().forEach(key -> BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(key.toString().toUpperCase())), ((List<?>) map.get(key)).stream().map(listValue -> Objects.requireNonNull(Material.getMaterial(listValue.toString().toUpperCase()))).collect(Collectors.toList()))));
+            configOut.forEach(map -> map.keySet().forEach(key -> BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(key.toUpperCase())), map.get(key).stream().map(value -> Objects.requireNonNull(Material.getMaterial(value.toUpperCase()))).collect(Collectors.toList()))));
         }
         catch (NullPointerException e) {
             Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);
