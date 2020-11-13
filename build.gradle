@@ -49,3 +49,9 @@ sourceSets {
         srcDirs = ['src/test']
     }
 }
+
+task copyPlugin(type: Copy, dependsOn: 'build') {
+    from "$buildDir/libs"
+    include '*.jar'
+    into file("server/plugins")
+}
