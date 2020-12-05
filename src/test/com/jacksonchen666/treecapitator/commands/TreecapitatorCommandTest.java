@@ -52,7 +52,7 @@ public class TreecapitatorCommandTest {
         tabCompletes.put(new String[] {""}, TreecapitatorCommand.arg2No0.size() + server.getOnlinePlayers().size());
         tabCompletes.put(new String[] {"maxLogs", ""}, 6);
         tabCompletes.put(new String[] {"maxLogs", "16384", ""}, 0);
-        tabCompletes.put(new String[] {"cooldown", ""}, 5);
+        tabCompletes.put(new String[] {"cooldown", ""}, 6);
         tabCompletes.put(new String[] {"cooldown", "5", ""}, 0);
         tabCompletes.put(new String[] {player2.getName(), ""}, 0);
         tabCompletes.put(new String[] {"blocksAndItems", ""}, 3);

@@ -244,7 +244,7 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                     }
                     else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
                         List<String> numList = new ArrayList<>();
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i <= 5; i++) {
                             numList.add(String.valueOf(i * 2));
                         }
                         return numList;
