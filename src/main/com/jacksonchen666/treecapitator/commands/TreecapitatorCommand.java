@@ -26,11 +26,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
@@ -201,20 +203,21 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     }
 
     private void saveBlocksAndItems() {
+        ConfigurationSection blocksAndItemsSection = Objects.requireNonNull(plugin.getConfig().getConfigurationSection("settings.blocksAndItems"));
         Map<Material, List<Material>> map = BreakingBlocks.getAcceptableItemAndBlock();
-        Map<String, List<String>> result = new HashMap<>();
+        String prev = blocksAndItemsSection.getValues(false).toString();
         for (Material key : map.keySet()) {
             List<String> list = new ArrayList<>();
             for (Material material : map.get(key)) {
-                String toString = material.toString();
-                list.add(toString);
+                list.add(material.toString());
             }
-            result.put(key.toString(), list);
+            blocksAndItemsSection.set(key.toString(), list);
         }
-        for (String s : result.keySet()) {
-            plugin.getConfig().set("settings.blocksAndItems." + s, result.get(s));
+        plugin.saveConfig();
+        String now = blocksAndItemsSection.getValues(false).toString();
+        if (prev.equals(now)) {
+            Bukkit.getLogger().log(Level.WARNING, "Config did not save. Expected " + map.toString() + ", but got " + now);
         }
-        plugin.getConfig().set("settings.blocksAndItemsList", new ArrayList<>(result.keySet()));
     }
 
     @Override
