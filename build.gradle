@@ -23,6 +23,9 @@ plugins {
 group 'com.jacksonchen666.treecapitator'
 version '2.0.0'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 import org.apache.tools.ant.filters.*
 
 processResources {
