@@ -39,6 +39,7 @@ public class TreecapitatorCommandTest {
     private ServerMock server;
     private PlayerMock player1;
     private PlayerMock player2;
+    private final HashMap<String[], Integer> tabCompletes = new HashMap<>();
 
     @Before
     public void setUp() {
@@ -48,6 +49,37 @@ public class TreecapitatorCommandTest {
         player1.setOp(true);
         player2 = server.addPlayer();
         MockBukkit.load(Treecapitator.class);
+        tabCompletes.put(new String[] {""}, TreecapitatorCommand.arg2No0.size() + server.getOnlinePlayers().size());
+        tabCompletes.put(new String[] {"maxLogs", ""}, 6);
+        tabCompletes.put(new String[] {"maxLogs", "16384", ""}, 0);
+        tabCompletes.put(new String[] {"cooldown", ""}, 5);
+        tabCompletes.put(new String[] {"cooldown", "5", ""}, 0);
+        tabCompletes.put(new String[] {player2.getName(), ""}, 0);
+        tabCompletes.put(new String[] {"blocksAndItems", ""}, 3);
+        tabCompletes.put(new String[] {"blocksAndItems", "no", "", ""}, 0);
+        tabCompletes.put(new String[] {"blocksAndItems", "add", ""}, 2);
+        long result = 0L;
+        for (Material material1 : Material.values()) {
+            if (material1.isItem()) {
+                result++;
+            }
+        }
+        tabCompletes.put(new String[] {"blocksAndItems", "add", "item", ""}, (int) result);
+        tabCompletes.put(new String[] {"blocksAndItems", "add", "item", "GOLDEN_AXE", ""}, 0);
+        tabCompletes.put(new String[] {"blocksAndItems", "add", "block", ""}, 1);
+        long count = 0L;
+        for (Material material : Material.values()) {
+            if (material.isBlock()) {
+                count++;
+            }
+        }
+        tabCompletes.put(new String[] {"blocksAndItems", "add", "block", "GOLDEN_AXE", ""}, (int) count);
+        tabCompletes.put(new String[] {"blocksAndItems", "remove", ""}, 2);
+        tabCompletes.put(new String[] {"blocksAndItems", "remove", "item", ""}, 1);
+        tabCompletes.put(new String[] {"blocksAndItems", "remove", "item", "GOLDEN_AXE", ""}, 0);
+        tabCompletes.put(new String[] {"blocksAndItems", "remove", "block", ""}, 1);
+        tabCompletes.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", ""}, 12);
+        tabCompletes.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", "OAK_LOG", ""}, 0);
     }
 
     @Test
@@ -240,33 +272,18 @@ public class TreecapitatorCommandTest {
     }
 
     @Test
-    public void testTabComplete() {
+    public void testTabCompleteOPPlayer() {
         PluginCommand command = Objects.requireNonNull(server.getPluginCommand("treecapitator"));
-        HashMap<String[], Integer> tests = new HashMap<>();
-        tests.put(new String[] {""}, TreecapitatorCommand.arg2No0.size() + server.getOnlinePlayers().size());
-        tests.put(new String[] {"maxLogs", ""}, 6);
-        tests.put(new String[] {"maxLogs", "16384", ""}, 0);
-        tests.put(new String[] {"cooldown", ""}, 5);
-        tests.put(new String[] {"cooldown", "5", ""}, 0);
-        tests.put(new String[] {player2.getName(), ""}, 0);
-        tests.put(new String[] {"blocksAndItems", ""}, 3);
-        tests.put(new String[] {"blocksAndItems", "no", "", ""}, 0);
-        tests.put(new String[] {"blocksAndItems", "add", ""}, 2);
-        tests.put(new String[] {"blocksAndItems", "add", "item", ""}, (int) Arrays.stream(Material.values()).filter(Material::isItem).map(material -> material.toString().toLowerCase()).count());
-        tests.put(new String[] {"blocksAndItems", "add", "item", "GOLDEN_AXE", ""}, 0);
-        tests.put(new String[] {"blocksAndItems", "add", "block", ""}, 1);
-        tests.put(new String[] {"blocksAndItems", "add", "block", "GOLDEN_AXE", ""}, (int) Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).count());
-        tests.put(new String[] {"blocksAndItems", "remove", ""}, 2);
-        tests.put(new String[] {"blocksAndItems", "remove", "item", ""}, 1);
-        tests.put(new String[] {"blocksAndItems", "remove", "item", "GOLDEN_AXE", ""}, 0);
-        tests.put(new String[] {"blocksAndItems", "remove", "block", ""}, 1);
-        tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", ""}, 12);
-        tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", "OAK_LOG", ""}, 0);
-        for (String[] test : tests.keySet()) {
-            Assert.assertEquals(Arrays.toString(test), command.tabComplete(player1, "treecapitator", test).size(), (int) tests.get(test));
+        for (String[] string : tabCompletes.keySet()) {
+            Assert.assertEquals(Arrays.toString(string), command.tabComplete(player1, "treecapitator", string).size(), (int) tabCompletes.get(string));
         }
-        for (String[] test : tests.keySet()) {
-            Assert.assertEquals(Arrays.toString(test), 0, command.tabComplete(player2, "treecapitator", test).size());
+    }
+
+    @Test
+    public void testTabCompleteNormalPlayer() {
+        PluginCommand command = Objects.requireNonNull(server.getPluginCommand("treecapitator"));
+        for (String[] string : tabCompletes.keySet()) {
+            Assert.assertEquals(Arrays.toString(string), 0, command.tabComplete(player2, "treecapitator", string).size());
         }
     }
 
