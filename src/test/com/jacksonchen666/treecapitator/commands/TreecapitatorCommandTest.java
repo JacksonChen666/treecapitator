@@ -262,15 +262,11 @@ public class TreecapitatorCommandTest {
         tests.put(new String[] {"blocksAndItems", "remove", "block", ""}, 1);
         tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", ""}, 12);
         tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", "OAK_LOG", ""}, 0);
-        for (String[] strings : tests.keySet()) {
-            if (command.tabComplete(player1, "treecapitator", strings).size() != tests.get(strings)) {
-                Assert.fail(Arrays.toString(strings));
-            }
+        for (String[] test : tests.keySet()) {
+            Assert.assertEquals(Arrays.toString(test), command.tabComplete(player1, "treecapitator", test).size(), (int) tests.get(test));
         }
         for (String[] test : tests.keySet()) {
-            if (!(command.tabComplete(player2, "treecapitator", test).size() == 0)) {
-                Assert.fail(Arrays.toString(test));
-            }
+            Assert.assertEquals(Arrays.toString(test), 0, command.tabComplete(player2, "treecapitator", test).size());
         }
     }
 
