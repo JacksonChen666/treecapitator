@@ -52,40 +52,7 @@ public class Treecapitator extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        List<Map<String, List<String>>> configOut = new ArrayList<>();
-        try {
-            ConfigurationSection blocksAndItemsConfig = Objects.requireNonNull(getConfig().getConfigurationSection("settings.blocksAndItems"));
-            Set<String> blocksAndItemsList = blocksAndItemsConfig.getKeys(false);
-            for (String item : blocksAndItemsList) {
-                Map<String, List<String>> temp2 = new HashMap<>();
-                temp2.put(item, getConfig().getStringList("settings.blocksAndItems." + item));
-                configOut.add(temp2);
-            }
-        }
-        catch (NullPointerException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "It seems like settings.blocksAndItems is empty or does not exist. Please check your config file.", e);
-            return;
-        }
-        // get configOut which is map from getConfig but more reliable than a map
-        // get the keys of the Map
-        // with the keys, process the value of the keys:
-        // turn object into strings, then into material enum
-        // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
-        // also throws NullPointerException if the given item doesn't exist and stops loading
-        try {
-            for (Map<String, List<String>> map : configOut) {
-                for (String s : map.keySet()) {
-                    List<Material> list = new ArrayList<>();
-                    for (String value : map.get(s)) {
-                        list.add(Objects.requireNonNull(Material.getMaterial(value.toUpperCase())));
-                    }
-                    BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(s.toUpperCase())), list);
-                }
-            }
-        }
-        catch (NullPointerException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);
-        }
+        loadConfig();
 
         BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");
         BreakingBlocks.cooldown = getConfig().getInt("settings.cooldown");
@@ -105,6 +72,39 @@ public class Treecapitator extends JavaPlugin {
         recipe.setIngredient('G', Material.GOLD_BLOCK);
         recipe.setIngredient('X', Material.GOLDEN_AXE);
         Bukkit.addRecipe(recipe);
+    }
+
+    private void loadConfig() {
+        Map<String, List<String>> configOut = new HashMap<>();
+        try {
+            ConfigurationSection blocksAndItemsConfig = Objects.requireNonNull(getConfig().getConfigurationSection("settings.blocksAndItems"));
+            Set<String> blocksAndItemsList = blocksAndItemsConfig.getKeys(false);
+            for (String item : blocksAndItemsList) {
+                configOut.put(item, blocksAndItemsConfig.getStringList(item));
+            }
+        }
+        catch (NullPointerException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "It seems like settings.blocksAndItems is empty or does not exist. Please check your config file.", e);
+            return;
+        }
+        // get configOut which is map from getConfig but more reliable than a map
+        // get the keys of the Map
+        // with the keys, process the value of the keys:
+        // turn object into strings, then into material enum
+        // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
+        // also throws NullPointerException if the given item doesn't exist and stops loading
+        try {
+            for (String s : configOut.keySet()) {
+                List<Material> list = new ArrayList<>();
+                for (String value : configOut.get(s)) {
+                    list.add(Objects.requireNonNull(Material.getMaterial(value.toUpperCase())));
+                }
+                BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(s.toUpperCase())), list);
+            }
+        }
+        catch (NullPointerException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);
+        }
     }
 
     @Override
