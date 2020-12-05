@@ -24,6 +24,7 @@ import com.jacksonchen666.treecapitator.processings.Listener;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -51,20 +52,27 @@ public class Treecapitator extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
+        List<Map<String, List<String>>> configOut = new ArrayList<>();
         try {
-            List<Map<String, List<String>>> configOut = new ArrayList<>();
-            List<String> blocksAndItemsList = getConfig().getStringList("settings.blocksAndItemsList");
+            ConfigurationSection blocksAndItemsConfig = Objects.requireNonNull(getConfig().getConfigurationSection("settings.blocksAndItems"));
+            Set<String> blocksAndItemsList = blocksAndItemsConfig.getKeys(false);
             for (String item : blocksAndItemsList) {
                 Map<String, List<String>> temp2 = new HashMap<>();
                 temp2.put(item, getConfig().getStringList("settings.blocksAndItems." + item));
                 configOut.add(temp2);
             }
-            // get configOut which is map from getConfig but more reliable than a map
-            // get the keys of the Map
-            // with the keys, process the value of the keys:
-            // turn object into strings, then into material enum
-            // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
-            // also throws NullPointerException if the given item doesn't exist and stops loading
+        }
+        catch (NullPointerException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "It seems like settings.blocksAndItems is empty or does not exist. Please check your config file.", e);
+            return;
+        }
+        // get configOut which is map from getConfig but more reliable than a map
+        // get the keys of the Map
+        // with the keys, process the value of the keys:
+        // turn object into strings, then into material enum
+        // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
+        // also throws NullPointerException if the given item doesn't exist and stops loading
+        try {
             for (Map<String, List<String>> map : configOut) {
                 for (String s : map.keySet()) {
                     List<Material> list = new ArrayList<>();
@@ -77,7 +85,6 @@ public class Treecapitator extends JavaPlugin {
         }
         catch (NullPointerException e) {
             Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);
-            return;
         }
 
         BreakingBlocks.maxLogs = getConfig().getInt("settings.maxLogs");

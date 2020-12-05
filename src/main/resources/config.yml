@@ -22,9 +22,6 @@ settings:
   maxLogs: 32
   # Seconds before the axe can be used to cut more.
   cooldown: 2
-  # All items in the list should contain all key values at blocksAndItems
-  blocksAndItemsList:
-    - GOLDEN_AXE
   # All items must be upper case (plugin deals with that) and in minecraft Material enum (plugin fails to load if it doesn't exists).
   blocksAndItems:
     GOLDEN_AXE:
