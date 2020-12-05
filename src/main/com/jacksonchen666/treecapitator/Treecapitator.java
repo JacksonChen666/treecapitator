@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class Treecapitator extends JavaPlugin {
     private NamespacedKey key;
@@ -66,7 +65,15 @@ public class Treecapitator extends JavaPlugin {
             // turn object into strings, then into material enum
             // now use the list of values to add it to acceptableBlocksAndItems (with the key also being a material enum)
             // also throws NullPointerException if the given item doesn't exist and stops loading
-            configOut.forEach(map -> map.keySet().forEach(key -> BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(key.toUpperCase())), map.get(key).stream().map(value -> Objects.requireNonNull(Material.getMaterial(value.toUpperCase()))).collect(Collectors.toList()))));
+            for (Map<String, List<String>> map : configOut) {
+                for (String s : map.keySet()) {
+                    List<Material> list = new ArrayList<>();
+                    for (String value : map.get(s)) {
+                        list.add(Objects.requireNonNull(Material.getMaterial(value.toUpperCase())));
+                    }
+                    BreakingBlocks.putItem(Objects.requireNonNull(Material.getMaterial(s.toUpperCase())), list);
+                }
+            }
         }
         catch (NullPointerException e) {
             Bukkit.getLogger().log(Level.SEVERE, "An unknown item has been passed in the configuration file. Please check the config file for any non-existent minecraft items.", e);

@@ -26,14 +26,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
     public static final String COMMAND_NAME = "treecapitator";
@@ -205,7 +202,15 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
 
     private void saveBlocksAndItems() {
         Map<Material, List<Material>> map = BreakingBlocks.getAcceptableItemAndBlock();
-        Map<String, List<String>> result = map.keySet().stream().collect(Collectors.toMap(Enum::toString, key -> map.get(key).stream().map(Enum::toString).collect(Collectors.toList()), (a, b) -> b));
+        Map<String, List<String>> result = new HashMap<>();
+        for (Material key : map.keySet()) {
+            List<String> list = new ArrayList<>();
+            for (Material material : map.get(key)) {
+                String toString = material.toString();
+                list.add(toString);
+            }
+            result.put(key.toString(), list);
+        }
         for (String s : result.keySet()) {
             plugin.getConfig().set("settings.blocksAndItems." + s, result.get(s));
         }
@@ -218,7 +223,11 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             case 0:
                 List<String> tabComplete = new ArrayList<>();
                 if (sender.hasPermission("treecapitator.giveItem")) {
-                    tabComplete.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
+                    List<String> players = new ArrayList<>();
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        players.add(player.getName());
+                    }
+                    tabComplete.addAll(players);
                 }
                 if (sender.hasPermission("treecapitator.settings")) {
                     tabComplete.addAll(arg2No0);
@@ -227,10 +236,18 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
             case 1:
                 if (sender.hasPermission("treecapitator.settings")) {
                     if (args[0].equalsIgnoreCase("maxLogs")) { // 32, 64, 128... 2048
-                        return IntStream.range(5, 11).mapToObj(i -> String.valueOf((int) Math.pow(2, i))).collect(Collectors.toList());
+                        List<String> numList = new ArrayList<>();
+                        for (int i = 5; i < 11; i++) {
+                            numList.add(String.valueOf((int) Math.pow(2, i)));
+                        }
+                        return numList;
                     }
                     else if (args[0].equalsIgnoreCase("cooldown")) { // 0, 2, 4... 10
-                        return IntStream.iterate(0, i -> i < 10, i -> i + 2).mapToObj(String::valueOf).collect(Collectors.toList());
+                        List<String> numList = new ArrayList<>();
+                        for (int i = 1; i < 5; i++) {
+                            numList.add(String.valueOf(i * 2));
+                        }
+                        return numList;
                     }
                     else if (args[0].equalsIgnoreCase("blocksAndItems")) {
                         return Arrays.asList("add", "remove", "list"); // /treecapitator _____
@@ -249,10 +266,20 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                     boolean block = args[2].equalsIgnoreCase("block");
                     boolean item = args[2].equalsIgnoreCase("item");
                     if (block && (add || remove) || item && remove) {
-                        return BreakingBlocks.getAcceptableItemAndBlock().keySet().stream().map(material -> material.toString().toLowerCase()).collect(Collectors.toList());
+                        List<String> list = new ArrayList<>();
+                        for (Material material : BreakingBlocks.getAcceptableItemAndBlock().keySet()) {
+                            list.add(material.toString().toLowerCase());
+                        }
+                        return list;
                     }
                     else if (item && add) {
-                        return Arrays.stream(Material.values()).filter(Material::isItem).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
+                        List<String> addableItems = new ArrayList<>();
+                        for (Material material : Material.values()) {
+                            if (material.isItem()) {
+                                addableItems.add(material.toString().toLowerCase());
+                            }
+                        }
+                        return addableItems; // /treecapitator add block _____
                     }
                 }
                 break;
@@ -263,16 +290,34 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                     boolean block = args[2].equalsIgnoreCase("block");
                     if (block) {
                         if (add) {
-                            return Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
+                            List<String> addable = new ArrayList<>();
+                            for (Material material : Material.values()) {
+                                if (material.isBlock()) {
+                                    addable.add(material.toString().toLowerCase());
+                                }
+                            }
+                            return addable; // /treecapitator add block _____
                         }
                         else if (remove) {
-                            return BreakingBlocks.getAcceptableItemAndBlock().values().stream().flatMap(Collection::stream).map(material -> material.toString().toLowerCase()).collect(Collectors.toList());
+                            List<String> removable = new ArrayList<>();
+                            for (List<Material> materials : BreakingBlocks.getAcceptableItemAndBlock().values()) {
+                                for (Material material : materials) {
+                                    removable.add(material.toString().toLowerCase());
+                                }
+                            }
+                            return removable;
                         }
                     }
                 }
                 break;
         }
-        //return Arrays.stream(Material.values()).filter(Material::isBlock).map(material -> material.toString().toLowerCase()).collect(Collectors.toList()); // /treecapitator add block _____
+        //        List<String> list = new ArrayList<>();/*
+        //        for (Material material : Material.values()) {
+        //            if (material.isBlock()) {
+        //                list.add(material.toString().toLowerCase());
+        //            }
+        //        }
+        //        return list; // /treecapitator add block _____*/
         return Collections.emptyList();
     }
 }

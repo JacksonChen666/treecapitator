@@ -34,7 +34,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class TreecapitatorCommandTest {
     private ServerMock server;
@@ -56,7 +55,15 @@ public class TreecapitatorCommandTest {
         CommandResult result = server.execute("treecapitator", player1);
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Ok, here is your treecapitator."));
         ItemStack item = TreecapitatorItem.createItem();
-        Assert.assertTrue(IntStream.range(0, 35).mapToObj(i -> player1.getInventory().getItem(i)).anyMatch(item::equals));
+        boolean b = false;
+        for (int i = 0; i < 35; i++) {
+            ItemStack itemStack = player1.getInventory().getItem(i);
+            if (item.equals(itemStack)) {
+                b = true;
+                break;
+            }
+        }
+        Assert.assertTrue(b);
         result.assertSucceeded();
     }
 
@@ -65,7 +72,15 @@ public class TreecapitatorCommandTest {
         CommandResult result = server.execute("treecapitator", player1, player2.getName());
         result.assertResponse(ChatColors.color("&a[&rTreecapitator&a]&r Gave " + player2.getName() + " a treecapitator."));
         ItemStack item = TreecapitatorItem.createItem();
-        Assert.assertTrue(IntStream.range(0, 35).mapToObj(i -> player2.getInventory().getItem(i)).anyMatch(item::equals));
+        boolean b = false;
+        for (int i = 0; i < 35; i++) {
+            ItemStack itemStack = player2.getInventory().getItem(i);
+            if (item.equals(itemStack)) {
+                b = true;
+                break;
+            }
+        }
+        Assert.assertTrue(b);
         result.assertSucceeded();
     }
 
@@ -247,8 +262,16 @@ public class TreecapitatorCommandTest {
         tests.put(new String[] {"blocksAndItems", "remove", "block", ""}, 1);
         tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", ""}, 12);
         tests.put(new String[] {"blocksAndItems", "remove", "block", "GOLDEN_AXE", "OAK_LOG", ""}, 0);
-        tests.keySet().stream().filter(test -> command.tabComplete(player1, "treecapitator", test).size() != tests.get(test)).map(Arrays::toString).forEach(Assert::fail);
-        tests.keySet().stream().filter(test -> !(command.tabComplete(player2, "treecapitator", test).size() == 0)).map(Arrays::toString).forEach(Assert::fail);
+        for (String[] strings : tests.keySet()) {
+            if (command.tabComplete(player1, "treecapitator", strings).size() != tests.get(strings)) {
+                Assert.fail(Arrays.toString(strings));
+            }
+        }
+        for (String[] test : tests.keySet()) {
+            if (!(command.tabComplete(player2, "treecapitator", test).size() == 0)) {
+                Assert.fail(Arrays.toString(test));
+            }
+        }
     }
 
     @After

@@ -88,13 +88,27 @@ public class BreakingBlocksTest {
     public void testCooldown() {
         List<Block> blocks = BreakingBlocks.getBlocks(player1.getWorld().getBlockAt(0, 64, 0), 1);
         Material toBreak = BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).get(0);
-        blocks.forEach(block -> block.setType(toBreak));
+        for (Block block3 : blocks) {
+            block3.setType(toBreak);
+        }
         player1.simulateBlockBreak(blocks.get(0));
-        blocks.stream().filter(block2 -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block2)).map(block1 -> "Failed to cut down logs").forEach(Assert::fail);
-        blocks.forEach(block -> block.setType(toBreak));
+        for (Block block2 : blocks) {
+            if (BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block2)) {
+                String s1 = "Failed to cut down logs";
+                Assert.fail(s1);
+            }
+        }
+        for (Block block1 : blocks) {
+            block1.setType(toBreak);
+        }
         player1.simulateBlockBreak(blocks.get(0));
         blocks.get(0).setType(toBreak);
-        blocks.stream().filter(block -> !BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block)).map(block -> "Failed to not cut down logs").forEach(Assert::fail);
+        for (Block block : blocks) {
+            if (!BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block)) {
+                String s = "Failed to not cut down logs";
+                Assert.fail(s);
+            }
+        }
     }
 
     @After

@@ -57,7 +57,14 @@ public class ListenerTest {
         BreakingBlocks.maxLogs = blocks.size();
         player1.simulateBlockBreak(world.getBlockAt(0, y, 0));
         blocks = BreakingBlocks.getBlocks(world.getBlockAt(0, y, 0), 3);
-        Assert.assertFalse("Did not cut the entire thing.", blocks.stream().anyMatch(block -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block)));
+        boolean b = false;
+        for (Block block : blocks) {
+            if (BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, block)) {
+                b = true;
+                break;
+            }
+        }
+        Assert.assertFalse("Did not cut the entire thing.", b);
     }
 
     @After
