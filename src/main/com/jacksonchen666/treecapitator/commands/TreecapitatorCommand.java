@@ -314,13 +314,6 @@ public class TreecapitatorCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
         }
-        //        List<String> list = new ArrayList<>();/*
-        //        for (Material material : Material.values()) {
-        //            if (material.isBlock()) {
-        //                list.add(material.toString().toLowerCase());
-        //            }
-        //        }
-        //        return list; // /treecapitator add block _____*/
         return Collections.emptyList();
     }
 }

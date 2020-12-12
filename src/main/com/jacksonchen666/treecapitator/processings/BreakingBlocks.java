@@ -87,7 +87,12 @@ public class BreakingBlocks {
      * @return Acceptable
      */
     public static boolean acceptableItemAndBlock(Material item, Material block) {
-        return acceptableItemAndBlock.get(item).stream().anyMatch(material -> block == material);
+        for (Material material : acceptableItemAndBlock.get(item)) {
+            if (block == material) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
