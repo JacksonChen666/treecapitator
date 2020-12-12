@@ -44,15 +44,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-sourceSets {
-    main.java {
-        srcDirs = ['src/main']
-    }
-    test.java {
-        srcDirs = ['src/test']
-    }
-}
-
 task copyPlugin(type: Copy, dependsOn: 'build') {
     from "$buildDir/libs"
     include '*.jar'
