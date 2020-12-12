@@ -29,10 +29,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class BreakingBlocksTest {
     private ServerMock server;
@@ -62,8 +61,16 @@ public class BreakingBlocksTest {
 
     @Test
     public void testAcceptableBlocks() {
-        List<Boolean> acceptables = BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE).stream().map(material -> BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, material)).collect(Collectors.toList());
-        List<Boolean> match = IntStream.range(0, acceptables.size()).mapToObj(i -> true).collect(Collectors.toList());
+        List<Boolean> acceptables = new ArrayList<>();
+        for (Material material : BreakingBlocks.getAcceptableItemAndBlock().get(Material.GOLDEN_AXE)) {
+            Boolean acceptableItemAndBlock = BreakingBlocks.acceptableItemAndBlock(Material.GOLDEN_AXE, material);
+            acceptables.add(acceptableItemAndBlock);
+        }
+        List<Boolean> match = new ArrayList<>();
+        int bound = acceptables.size();
+        for (int i = 0; i < bound; i++) {
+            match.add(true);
+        }
         Assert.assertEquals("Acceptables does not match all items", match, acceptables);
     }
 
